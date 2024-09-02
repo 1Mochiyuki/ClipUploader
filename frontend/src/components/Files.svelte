@@ -11,6 +11,7 @@
       ...files,
       { id: newFileId, fileName: `Choose a file ${newFileId}` },
     ];
+    console.log("meow");
     console.log(files);
   }
   function closeFileSection(file) {
