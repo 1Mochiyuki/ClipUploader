@@ -24,7 +24,7 @@ func (a *App) startup(ctx context.Context) {
 }
 
 func (a *App) ChooseFile() string {
-	filename, err := dialog.File().Filter("Text Documents", "txt").Load()
+	filename, err := dialog.File().Filter("Media files", "mp4", "mov", "mkv", "gif", "txt").Load()
 	if err != nil {
 		fmt.Println("user did not select file")
 	}
