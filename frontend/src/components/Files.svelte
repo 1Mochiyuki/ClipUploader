@@ -1,11 +1,12 @@
 <script>
-  import { ChooseFile } from "../../wailsjs/go/main/App.js";
+  import { ChooseFile, RemovePathFromFile } from "../../wailsjs/go/main/App.js";
   import Navbar from "./Navbar.svelte";
   let files = [];
   $: newFileId = totalFiles ? Math.max(...files.map((f) => f.id)) + 1 : 1;
   $: totalFiles = files.length;
   $: placeholderText = "";
-
+  $: placeHolderEmpty = placeholderText === undefined || placeholderText === "";
+  const SELECT_A_FILE_TEXT = "Select a file";
   /**
    * @param {Object} file the currently selected file.
    **/
@@ -20,28 +21,38 @@
    *
    * @param {string} absPath The absolute path of the current file.
    * */
-  function removePath(absPath) {
-    if (absPath === undefined || absPath === "") return;
-    if (absPath.includes("/")) {
-      const parts = absPath.split("/");
-      return parts[parts.length - 1];
-    }
-    const parts = absPath.split("\\");
-    return parts[parts.length - 1];
+  async function removePath(absPath) {
+    return await RemovePathFromFile(absPath).then((newName) => {
+      let fileName;
+      fileName = newName;
+      return fileName;
+    });
   }
+  /**
+   *
+   * @param {Object} file the currently selected file.
+   *
+   * */
+  const getFileName = (file) => {
+    if (file.fileName === undefined || file.fileName === "")
+      return SELECT_A_FILE_TEXT;
+    return file.fileName;
+  };
   /**
    * @param {Object} file the currently selected file.
    **/
 
-  function handleChooseFile(file) {
+  async function handleChooseFile(file) {
     let fileName;
-    ChooseFile().then((x) => {
-      file.absPath = x;
-      fileName = removePath(x);
-      console.log(`fileName: ${fileName}`);
-      file.fileName = fileName;
-      placeholderText = fileName;
+    await ChooseFile().then((absPath) => {
+      file.absPath = absPath;
+      fileName = removePath(absPath).then((name) => {
+        file.fileName = name;
+        placeholderText = name;
+        console.log(`file name in handleChooseFile(): ${file.fileName}`);
+      });
     });
+    console.log(`outside promise calls: ${file.fileName}`);
   }
   function addFileSection() {
     console.log(`length: ${totalFiles} id: ${newFileId}`);
@@ -86,11 +97,8 @@
             /></svg
           ></button
         >
-        <!--        <button class="button-4"> Im a FileUpload svelte component :3 </button> -->
         <span class="fileName-text"
-          >{placeholderText === undefined || placeholderText === ""
-            ? "Select a file"
-            : file.fileName}</span
+          >{placeHolderEmpty ? SELECT_A_FILE_TEXT : getFileName(file)}</span
         >
       </div>
     </li>

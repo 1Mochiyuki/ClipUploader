@@ -2,9 +2,6 @@
   import { createEventDispatcher } from "svelte";
 
   export let addFileSection = () => {};
-  let test = () => {
-    console.log("test");
-  };
 </script>
 
 <div class="button-div" style="text-align: center; padding-top: 15px;">

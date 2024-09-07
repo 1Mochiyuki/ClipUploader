@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/sqweek/dialog"
 )
@@ -29,4 +30,22 @@ func (a *App) ChooseFile() string {
 		fmt.Println("user did not select file")
 	}
 	return filename
+}
+
+func (a *App) RemovePathFromFile(fileName string) string {
+	var name string
+	if strings.Contains(fileName, "\\") {
+		parts := strings.Split(fileName, "\\")
+		name = parts[len(parts)-1]
+		fmt.Printf("new name (Go): %s\n", name)
+		return name
+	}
+	if strings.Contains(fileName, "/") {
+		parts := strings.Split(fileName, "/")
+		name = parts[len(parts)-1]
+		fmt.Printf("new name (Go): %s\n", name)
+
+		return name
+	}
+	return ""
 }

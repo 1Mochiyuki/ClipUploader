@@ -5,3 +5,7 @@
 export function ChooseFile() {
   return window['go']['main']['App']['ChooseFile']();
 }
+
+export function RemovePathFromFile(arg1) {
+  return window['go']['main']['App']['RemovePathFromFile'](arg1);
+}
