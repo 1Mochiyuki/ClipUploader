@@ -5,7 +5,7 @@
   $: newFileId = totalFiles ? Math.max(...files.map((f) => f.id)) + 1 : 1;
   $: totalFiles = files.length;
   $: placeholderText = "";
-  $: placeHolderEmpty = placeholderText === undefined || placeholderText === "";
+  $: placeHolderEmpty = !placeholderText;
   const SELECT_A_FILE_TEXT = "Select a file";
   /**
    * @param {Object} file the currently selected file.
@@ -19,49 +19,35 @@
   };
   /**
    *
-   * @param {string} absPath The absolute path of the current file.
-   * */
-  async function removePath(absPath) {
-    return await RemovePathFromFile(absPath).then((newName) => {
-      let fileName;
-      fileName = newName;
-      return fileName;
-    });
-  }
-  /**
-   *
    * @param {Object} file the currently selected file.
    *
    * */
   const getFileName = (file) => {
-    if (file.fileName === undefined || file.fileName === "")
+    console.log(`file name: ${file.fileName}`);
+
+    if (!file.fileName) {
+      console.log(`here`);
       return SELECT_A_FILE_TEXT;
+    }
     return file.fileName;
   };
+
   /**
    * @param {Object} file the currently selected file.
    **/
-  async function handleChooseFile2(file) {
+  async function handleChooseFile(file) {
+    placeholderText = undefined;
+
     await ChooseFile().then((absPath) => {
       file.absPath = absPath;
     });
-    await removePath(file.absPath).then((name) => {
+    await RemovePathFromFile(file.absPath).then((name) => {
       file.fileName = name;
       placeholderText = name;
     });
+    console.log(`name outside promise: ${file.fileName}`);
   }
-  async function handleChooseFile(file) {
-    let fileName;
-    await ChooseFile().then((absPath) => {
-      file.absPath = absPath;
-      fileName = await removePath(absPath).then((name) => {
-        file.fileName = name;
-        placeholderText = name;
-        console.log(`file name in handleChooseFile(): ${file.fileName}`);
-      });
-    });
-    console.log(`outside promise calls: ${file.fileName}`);
-  }
+
   function addFileSection() {
     console.log(`length: ${totalFiles} id: ${newFileId}`);
     files = [...files, { id: newFileId, fileName: "", filePath: "" }];
@@ -93,7 +79,7 @@
         <button
           class="button-4"
           style="padding-bottom: 3px;"
-          on:click={() => handleChooseFile2(file)}
+          on:click={() => handleChooseFile(file)}
           ><svg
             xmlns="http://www.w3.org/2000/svg"
             height="24px"
