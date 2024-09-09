@@ -1,14 +1,17 @@
 <script>
-  import { createEventDispatcher } from "svelte";
+  import { push } from "svelte-spa-router";
 
   export let addFileSection = () => {};
 </script>
 
-<div class="button-div" style="text-align: center; padding-top: 15px;">
+<div
+  class="button-div"
+  style="text-align: center;  justify-content: space-between;"
+>
   <button
     class="button-4"
     on:click={addFileSection}
-    style="background-color: rgba(0,0,0,0); border: 0px solid; margin-right: 170px; box-shadow: none;"
+    style="background-color: rgba(0,0,0,0); border: 0px solid;  box-shadow: none;"
     ><svg
       xmlns="http://www.w3.org/2000/svg"
       height="30px"
@@ -20,13 +23,17 @@
       /></svg
     ></button
   >
-  <button class="button-4" on:click={addFileSection}
-    >Add File Section Meow
-  </button>
+  <div>
+    <button class="button-4" on:click={addFileSection}
+      >Add File Section
+    </button>
+    <button class="button-4"> Upload All </button>
+  </div>
+
   <button
     class="button-4"
-    on:click={addFileSection}
-    style="background-color: rgba(0,0,0,0); border: 0px solid; margin-left: 170px; box-shadow: none;"
+    on:click={() => push("/settings")}
+    style="background-color: rgba(0,0,0,0); border: 0px solid;  box-shadow: none;"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -42,11 +49,4 @@
 </div>
 
 <style>
-  .button-div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50px;
-    border: 3px solid green;
-  }
 </style>

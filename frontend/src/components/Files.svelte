@@ -41,12 +41,20 @@
   /**
    * @param {Object} file the currently selected file.
    **/
-
+  async function handleChooseFile2(file) {
+    await ChooseFile().then((absPath) => {
+      file.absPath = absPath;
+    });
+    await removePath(file.absPath).then((name) => {
+      file.fileName = name;
+      placeholderText = name;
+    });
+  }
   async function handleChooseFile(file) {
     let fileName;
     await ChooseFile().then((absPath) => {
       file.absPath = absPath;
-      fileName = removePath(absPath).then((name) => {
+      fileName = await removePath(absPath).then((name) => {
         file.fileName = name;
         placeholderText = name;
         console.log(`file name in handleChooseFile(): ${file.fileName}`);
@@ -85,7 +93,7 @@
         <button
           class="button-4"
           style="padding-bottom: 3px;"
-          on:click={() => handleChooseFile(file)}
+          on:click={() => handleChooseFile2(file)}
           ><svg
             xmlns="http://www.w3.org/2000/svg"
             height="24px"

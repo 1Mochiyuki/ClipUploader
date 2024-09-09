@@ -1,8 +1,11 @@
 <script>
-  import Files from "./components/Files.svelte";
+  import Router from "svelte-spa-router";
+  import routes from "./routes";
 </script>
 
-<Files></Files>
+<main>
+  <Router {routes} />
+</main>
 
 <style>
   :global(.visually-hidden) {
