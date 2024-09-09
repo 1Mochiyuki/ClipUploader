@@ -9,3 +9,7 @@ export function ChooseFile() {
 export function RemovePathFromFile(arg1) {
   return window['go']['main']['App']['RemovePathFromFile'](arg1);
 }
+
+export function UploadViaPomf(arg1) {
+  return window['go']['main']['App']['UploadViaPomf'](arg1);
+}

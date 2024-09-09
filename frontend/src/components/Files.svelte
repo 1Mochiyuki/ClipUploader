@@ -23,12 +23,7 @@
    *
    * */
   const getFileName = (file) => {
-    console.log(`file name: ${file.fileName}`);
-
-    if (!file.fileName) {
-      console.log(`here`);
-      return SELECT_A_FILE_TEXT;
-    }
+    if (!file.fileName) return SELECT_A_FILE_TEXT;
     return file.fileName;
   };
 

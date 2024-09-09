@@ -4,3 +4,5 @@
 export function ChooseFile():Promise<string>;
 
 export function RemovePathFromFile(arg1:string):Promise<string>;
+
+export function UploadViaPomf(arg1:string):Promise<void>;

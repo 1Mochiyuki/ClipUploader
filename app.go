@@ -1,11 +1,17 @@
 package main
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
+	"log"
+	"net/http"
+	"os"
 	"strings"
 
 	"github.com/sqweek/dialog"
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 // App struct
@@ -30,6 +36,36 @@ func (a *App) ChooseFile() string {
 		fmt.Println("user did not select file")
 	}
 	return filename
+}
+
+func (a *App) UploadViaPomf(absPath string) {
+	log.Printf("uploading: %s to", absPath)
+	fileInfo, err := os.Stat(absPath)
+	if err != nil {
+		panic(err)
+	}
+	if fileInfo.Size() > (1024 * 1024 * 1024) {
+		msg := fmt.Sprintf("File: %s is over the 1 GB limit.\nSize: %d", fileInfo.Name(), fileInfo.Size())
+		runtime.MessageDialog(a.ctx, runtime.MessageDialogOptions{
+			Type:          runtime.ErrorDialog,
+			Title:         "File Size Limit",
+			Message:       msg,
+			DefaultButton: "OK",
+		})
+		return
+	}
+	files := map[string]string{"files[]:": absPath}
+	data, err := json.Marshal(files)
+	if err != nil {
+		panic(err)
+	}
+
+	resp, err := http.Post("", "application/json", bytes.NewBuffer(data))
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	defer resp.Body.Close()
 }
 
 func (a *App) RemovePathFromFile(fileName string) string {
