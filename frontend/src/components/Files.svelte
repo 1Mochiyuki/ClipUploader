@@ -30,7 +30,8 @@
   /**
    * @param {Object} file the currently selected file.
    **/
-  async function handleChooseFile(file) {
+
+  const handleChooseFile = async (file) => {
     placeholderText = undefined;
 
     await ChooseFile().then((absPath) => {
@@ -41,13 +42,13 @@
       placeholderText = name;
     });
     console.log(`name outside promise: ${file.fileName}`);
-  }
+  };
 
-  function addFileSection() {
+  const addFileSection = () => {
     console.log(`length: ${totalFiles} id: ${newFileId}`);
     files = [...files, { id: newFileId, fileName: "", filePath: "" }];
     console.log(files);
-  }
+  };
 </script>
 
 <Navbar {addFileSection} />
