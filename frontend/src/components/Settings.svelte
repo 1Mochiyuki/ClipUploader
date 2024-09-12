@@ -27,11 +27,14 @@
     <div class="center" style=" border: 2px solid gray;">
       <label for="selected-host">Select a host</label>
       <select name="selected-host" bind:value={selectedHost}>
+        <option value="Select a host" selected hidden disabled
+          >Select a host</option
+        >
         {#each hosts as host}
           <option value={host}>{host}</option>
         {/each}
       </select>
-      <span>{!selectedHost ? "Nothing selected" : selectedHost}</span>
+      <span>{selectedHost}</span>
     </div>
 
     <div class="center" style=" border: 2px solid gray;">
@@ -39,11 +42,13 @@
       <input
         name="timeout-duration"
         type="number"
-        placeholder="5000"
+        placeholder="Timeout Duration"
         bind:value={timeoutDuration}
       />
 
-      <label for="timeoutDuration">Timeout Duration: {timeoutDuration}</label>
+      <label for="timeoutDuration"
+        >Timeout Duration: {!timeoutDuration ? 0 : timeoutDuration}</label
+      >
     </div>
   </div>
 </div>
