@@ -85,6 +85,8 @@
       <div class="select-dropdown" role="listbox">
         <ul class="select-options">
           {#each options as option (option.value)}
+            <!-- svelte-ignore a11y-click-events-have-key-events </-->
+            a11y-no-static-element-interactions
             <li
               on:click={() => selectOption(option)}
               class="select-option"
