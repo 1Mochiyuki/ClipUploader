@@ -31,11 +31,23 @@ func (a *App) startup(ctx context.Context) {
 }
 
 func (a *App) ChooseFile() string {
-	filename, err := dialog.File().Filter("Media files", "mp4", "mov", "mkv", "gif", "txt").Load()
+	filename, err := dialog.File().Filter("Media files", "mp4", "mov", "mkv", "gif").Load()
 	if err != nil {
 		fmt.Println("user did not select file")
 	}
 	return filename
+}
+
+func (a *App) SaveStringPreference(pref string) {
+	// impl save to file
+}
+
+func (a *App) SaveIntPreference(pref int) {
+	// impl save to file
+}
+
+func (a *App) UploadViaLobfile(absPath string) {
+	// impl upload to lobfile docs: https://lobfile.com/api/v3/docs/
 }
 
 func (a *App) UploadViaPomf(absPath string) {

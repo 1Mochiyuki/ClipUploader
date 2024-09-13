@@ -10,6 +10,18 @@ export function RemovePathFromFile(arg1) {
   return window['go']['main']['App']['RemovePathFromFile'](arg1);
 }
 
+export function SaveIntPreference(arg1) {
+  return window['go']['main']['App']['SaveIntPreference'](arg1);
+}
+
+export function SaveStringPreference(arg1) {
+  return window['go']['main']['App']['SaveStringPreference'](arg1);
+}
+
+export function UploadViaLobfile(arg1) {
+  return window['go']['main']['App']['UploadViaLobfile'](arg1);
+}
+
 export function UploadViaPomf(arg1) {
   return window['go']['main']['App']['UploadViaPomf'](arg1);
 }
