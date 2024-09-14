@@ -1,6 +1,7 @@
 package main
 
 import (
+	"C2E-Wails/types"
 	"bytes"
 	"context"
 	"encoding/json"
@@ -8,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/sqweek/dialog"
@@ -38,12 +40,129 @@ func (a *App) ChooseFile() string {
 	return filename
 }
 
-func (a *App) SaveStringPreference(pref string) {
-	// impl save to file
+func preferencesFileExists() error {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return err
+	}
+	pathToPref := fmt.Sprintf("%s/Documents/clip-uploader/preferences.toml", homeDir)
+
+	_, err = os.Stat(pathToPref)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func (a *App) SaveIntPreference(pref int) {
-	// impl save to file
+type PreferencesFile struct {
+	Path        string
+	Preferences types.Preferences
+}
+
+func GetPreferencesFile() (*PreferencesFile, error) {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		panic(err)
+	}
+	pf := PreferencesFile{
+		Path: fmt.Sprintf("%s/Documents/clip-uploader/preferences.toml", home),
+	}
+
+	log.Printf("set path: %s", pf.Path)
+	return &pf, nil
+}
+
+func (p *PreferencesFile) File() *os.File {
+	if p.Exists() != nil {
+		p.Create()
+	}
+	file, err := os.Open(p.Path)
+	if err != nil {
+		panic(err)
+	}
+
+	return file
+}
+
+func preferencesPath() string {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		panic(err)
+	}
+	path := fmt.Sprintf("%s/Documents/clip-uploader/preferences.toml", home)
+	return path
+}
+
+func (p *PreferencesFile) Create() error {
+	if p.Exists() == nil {
+		return nil
+	}
+	if p.Path == "" {
+		p.Path = preferencesPath()
+	}
+	prefDir := fmt.Sprintf("%s/Documents/preferences.toml", p.Path)
+	log.Printf("pref dir: %s", prefDir)
+
+	file, err := os.Stat(prefDir)
+	if err != nil {
+		_, err := os.Create(prefDir)
+		if err != nil {
+			log.Println("what the fuck")
+			return err
+		}
+		// impl creating pref file if it doesnt exist
+	}
+	log.Printf("file exists file size: %d", file.Size())
+	return nil
+}
+
+func (p *PreferencesFile) Exists() error {
+	if p.Path != "" {
+		home, err := os.UserHomeDir()
+		if err != nil {
+			return err
+		}
+		p.Path = fmt.Sprintf("%s/Documents/clip-uploader/preferences.toml", home)
+	}
+	_, err := os.Stat(p.Path)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (a *App) SaveTimeoutDuration(duration int) {
+	pref, err := GetPreferencesFile()
+	if err != nil {
+		panic(err)
+	}
+	if pref.Exists() != nil {
+		pref.Create()
+	}
+
+	durationString := strconv.Itoa(duration)
+	_, err = pref.File().WriteString(durationString)
+	if err != nil {
+		panic(err)
+	}
+	pref.Preferences.TimeoutDuration = duration
+}
+
+func (a *App) SaveHost(selectedHost string) {
+	pref, err := GetPreferencesFile()
+	if err != nil {
+		panic(err)
+	}
+	if pref.Exists() != nil {
+		pref.Create()
+	}
+
+	_, err = pref.File().WriteString(selectedHost)
+	if err != nil {
+		panic(err)
+	}
+	pref.Preferences.UploadHost = selectedHost
 }
 
 func (a *App) UploadViaLobfile(absPath string) {

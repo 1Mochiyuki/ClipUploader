@@ -5,6 +5,11 @@
 
   export let selectedHost;
   export let timeoutDuration = 0;
+
+  const handleSaveSettings = () => {
+    alert(`host: ${selectedHost}\ntimeout duration: ${timeoutDuration}`);
+    console.log(`host: ${selectedHost}\ntimeout duration: ${timeoutDuration}`);
+  };
 </script>
 
 <div>
@@ -31,7 +36,9 @@
       <TimeoutDuration bind:timeoutDuration></TimeoutDuration>
     </div>
   </div>
-  <span>host: {selectedHost} timeout duration: {timeoutDuration}</span>
+  <div>
+    <button class="button-4" on:click={handleSaveSettings}>Save</button>
+  </div>
 </div>
 
 <style>

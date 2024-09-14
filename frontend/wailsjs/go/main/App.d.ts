@@ -5,9 +5,9 @@ export function ChooseFile():Promise<string>;
 
 export function RemovePathFromFile(arg1:string):Promise<string>;
 
-export function SaveIntPreference(arg1:number):Promise<void>;
+export function SaveHost(arg1:string):Promise<void>;
 
-export function SaveStringPreference(arg1:string):Promise<void>;
+export function SaveTimeoutDuration(arg1:number):Promise<void>;
 
 export function UploadViaLobfile(arg1:string):Promise<void>;
 

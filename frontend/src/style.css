@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 html {
   background-color: rgba(27, 38, 54, 1);
   text-align: center;
@@ -44,22 +46,26 @@ body {
 .button-4 {
   appearance: none;
   background-color: #fafbfc;
-  border: 1px solid rgba(27, 31, 35, 0.15);
-  border-radius: 6px;
+  border: 0.0625em solid rgba(27, 31, 35, 0.15);
+  border-radius: 0.375em;
   box-shadow:
-    rgba(27, 31, 35, 0.04) 0 1px 0,
-    rgba(255, 255, 255, 0.25) 0 1px 0 inset;
+    rgba(27, 31, 35, 0.04) 0 0.0625em 0,
+    rgba(255, 255, 255, 0.25) 0 0.0625em 0 inset;
   box-sizing: border-box;
   color: #24292e;
   cursor: pointer;
   display: inline-block;
-  font-family: -apple-system, system-ui, "Segoe UI", Helvetica, Arial,
-    sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-  font-size: 14px;
+  font-family: "Montserrat", serif;
+  font-size: 1.25rem;
+  /* Base font size */
+  font-style: normal;
   font-weight: 500;
-  line-height: 20px;
+  line-height: 1.428571429;
+  /* 20px / 14px */
+  width: 12rem;
   list-style: none;
-  padding: 6px 16px;
+  padding: 0.428571429em 1.142857143em;
+  /* 6px / 14px, 16px / 14px */
   position: relative;
   transition: background-color 0.2s cubic-bezier(0.3, 0, 0.5, 1);
   user-select: none;
@@ -85,12 +91,12 @@ body {
 
 .button-4:active {
   background-color: #dee2e7;
-  box-shadow: rgba(225, 228, 232, 0.2) 0 1px 0 inset;
+  box-shadow: rgba(225, 228, 232, 0.2) 0 0.0625em 0 inset;
   transition: none 0s;
 }
 
 .button-4:focus {
-  outline: 1px transparent;
+  outline: 0.0625em transparent;
 }
 
 .button-4:before {
@@ -105,5 +111,5 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 50px;
+  height: 3.125em;
 }

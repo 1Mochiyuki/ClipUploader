@@ -9,7 +9,7 @@
   style="text-align: center;  justify-content: space-between;"
 >
   <button
-    class="button-4"
+    class="navbar-button"
     on:click={addFileSection}
     style="background-color: rgba(0,0,0,0); border: 0px solid;  box-shadow: none;"
     ><svg
@@ -24,14 +24,14 @@
     ></button
   >
   <div>
-    <button class="button-4" on:click={addFileSection}
+    <button class="navbar-button" on:click={addFileSection}
       >Add File Section
     </button>
-    <button class="button-4"> Upload All </button>
+    <button class="navbar-button"> Upload All </button>
   </div>
 
   <button
-    class="button-4"
+    class="navbar-button"
     on:click={() => push("/settings")}
     style="background-color: rgba(0,0,0,0); border: 0px solid;  box-shadow: none;"
   >
@@ -49,4 +49,70 @@
 </div>
 
 <style>
+  .navbar-button {
+    appearance: none;
+    background-color: #fafbfc;
+    border: 1px solid rgba(27, 31, 35, 0.15);
+    border-radius: 6px;
+    box-shadow:
+      rgba(27, 31, 35, 0.04) 0 1px 0,
+      rgba(255, 255, 255, 0.25) 0 1px 0 inset;
+    box-sizing: border-box;
+    color: #24292e;
+    cursor: pointer;
+    display: inline-block;
+    font-family: -apple-system, system-ui, "navbar-button", Helvetica, Arial,
+      sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 20px;
+    list-style: none;
+    padding: 6px 16px;
+    position: relative;
+    transition: background-color 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: middle;
+    white-space: nowrap;
+    word-wrap: break-word;
+  }
+
+  .navbar-button:hover {
+    background-color: #f3f4f6;
+    text-decoration: none;
+    transition-duration: 0.1s;
+  }
+
+  .navbar-button:disabled {
+    background-color: #fafbfc;
+    border-color: rgba(27, 31, 35, 0.15);
+    color: #959da5;
+    cursor: default;
+  }
+
+  .navbar-button:active {
+    background-color: #dee2e7;
+    box-shadow: rgba(225, 228, 232, 0.2) 0 0.0625em 0 inset;
+    transition: none 0s;
+  }
+
+  .navbar-button:focus {
+    outline: 0.0625em transparent;
+  }
+
+  .navbar-button:before {
+    display: none;
+  }
+
+  .navbar-button:-webkit-details-marker {
+    display: none;
+  }
+
+  .button-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 3.125em;
+  }
 </style>

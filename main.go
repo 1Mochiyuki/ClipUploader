@@ -2,9 +2,6 @@ package main
 
 import (
 	"embed"
-	"fmt"
-	"log"
-	"os"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -16,9 +13,12 @@ var assets embed.FS
 
 func main() {
 	// Create an instance of the app structure
-	fileErr := createPreferencesFile()
-	if fileErr != nil {
-		panic(fileErr)
+	pref, prefFileerr := GetPreferencesFile()
+	if prefFileerr != nil {
+		panic(prefFileerr)
+	}
+	if pref.Exists() != nil {
+		pref.Create()
 	}
 
 	app := NewApp()
@@ -41,25 +41,4 @@ func main() {
 	if err != nil {
 		println("error: ", err.Error())
 	}
-}
-
-func createPreferencesFile() error {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return err
-	}
-	prefDir := fmt.Sprintf("%s/Documents/preferences.toml", home)
-	log.Printf("pref dir: %s", prefDir)
-
-	file, err := os.Stat(prefDir)
-	if err != nil {
-		_, err := os.Create(prefDir)
-		if err != nil {
-			log.Println("what the fuck")
-			return err
-		}
-		// impl creating pref file if it doesnt exist
-	}
-	log.Printf("file exists file size: %d", file.Size())
-	return nil
 }
