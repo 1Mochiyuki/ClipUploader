@@ -6,16 +6,20 @@ export function ChooseFile() {
   return window['go']['main']['App']['ChooseFile']();
 }
 
+export function Hosts() {
+  return window['go']['main']['App']['Hosts']();
+}
+
 export function RemovePathFromFile(arg1) {
   return window['go']['main']['App']['RemovePathFromFile'](arg1);
 }
 
-export function SaveHost(arg1) {
-  return window['go']['main']['App']['SaveHost'](arg1);
+export function SaveHost(arg1, arg2) {
+  return window['go']['main']['App']['SaveHost'](arg1, arg2);
 }
 
-export function SaveTimeoutDuration(arg1) {
-  return window['go']['main']['App']['SaveTimeoutDuration'](arg1);
+export function SaveTimeoutDuration(arg1, arg2) {
+  return window['go']['main']['App']['SaveTimeoutDuration'](arg1, arg2);
 }
 
 export function UploadViaLobfile(arg1) {

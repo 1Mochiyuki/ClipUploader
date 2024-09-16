@@ -3,11 +3,13 @@
 
 export function ChooseFile():Promise<string>;
 
+export function Hosts():Promise<{[key: string]: string}>;
+
 export function RemovePathFromFile(arg1:string):Promise<string>;
 
-export function SaveHost(arg1:string):Promise<void>;
+export function SaveHost(arg1:string,arg2:Array<number>):Promise<void>;
 
-export function SaveTimeoutDuration(arg1:number):Promise<void>;
+export function SaveTimeoutDuration(arg1:number,arg2:Array<number>):Promise<void>;
 
 export function UploadViaLobfile(arg1:string):Promise<void>;
 

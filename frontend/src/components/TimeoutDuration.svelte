@@ -1,4 +1,5 @@
 <script>
+  import { LogInfo } from "../../wailsjs/runtime/runtime.js";
   export let timeoutDuration = 0;
   let labelText = "Timeout Duration (Seconds)";
   let error = "";
@@ -10,7 +11,7 @@
       error = "Please enter a valid number";
     } else {
       error = "";
-      console.log(`Valid number entered: ${timeoutDuration}`);
+      LogInfo(`Valid number entered: ${timeoutDuration}`);
       // Here you can perform any action with the valid number
     }
   }

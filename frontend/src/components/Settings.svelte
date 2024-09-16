@@ -2,13 +2,13 @@
   import { push } from "svelte-spa-router";
   import HostInput from "./HostInput.svelte";
   import TimeoutDuration from "./TimeoutDuration.svelte";
+  import { LogPrint } from "../../wailsjs/runtime/runtime.js";
 
   export let selectedHost;
   export let timeoutDuration = 0;
 
   const handleSaveSettings = () => {
-    alert(`host: ${selectedHost}\ntimeout duration: ${timeoutDuration}`);
-    console.log(`host: ${selectedHost}\ntimeout duration: ${timeoutDuration}`);
+    LogPrint(`host: ${selectedHost}\ntimeout duration: ${timeoutDuration}`);
   };
 </script>
 
