@@ -1,10 +1,10 @@
 package main
 
 import (
-	"C2E-Wails/types"
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -45,7 +45,7 @@ func preferencesFileExists() error {
 	if err != nil {
 		return err
 	}
-	pathToPref := fmt.Sprintf("%s/Documents/clip-uploader/preferences.toml", homeDir)
+	pathToPref := fmt.Sprintf("%s/Documents/clip-uploader/preferences.txt", homeDir)
 
 	_, err = os.Stat(pathToPref)
 	if err != nil {
@@ -54,115 +54,140 @@ func preferencesFileExists() error {
 	return nil
 }
 
-type PreferencesFile struct {
-	Path        string
-	Preferences types.Preferences
+func (a *App) Hosts() map[string]string {
+	return map[string]string{
+		"catbox":  "Catbox",
+		"lobfile": "lobfile",
+		"pomf":    "pomf",
+		"other":   "Other",
+	}
 }
 
-func GetPreferencesFile() (*PreferencesFile, error) {
+func SetDefaultPreferences(app *App) error {
+	setTimeoutDurationErr := app.SaveTimeoutDuration(5000)
+	if setTimeoutDurationErr != nil {
+		return setTimeoutDurationErr
+	}
+	setHostErr := app.SaveHost(app.Hosts()["catbox"])
+	if setHostErr != nil {
+		return setHostErr
+	}
+
+	return nil
+}
+
+func createPreferenceFile() error {
+	appHome := appHome()
+
+	_, appHomeExists := os.Stat(appHome)
+	if appHomeExists != nil {
+
+		makeAppHomeErr := os.Mkdir(appHome, 0755)
+		if makeAppHomeErr != nil {
+			return fmt.Errorf("error creating app home directory: %s", makeAppHomeErr.Error())
+		}
+		log.Println("app home created, trying to write to file again")
+		createPreferenceFile()
+		return nil
+
+	}
+	log.Println("app directory created")
+	prefFilePath := fmt.Sprintf("%s/preferences.txt", appHome)
+	_, fileExistErr := os.Stat(prefFilePath)
+	if fileExistErr != nil {
+
+		_, err := os.Create(prefFilePath)
+		if err != nil {
+			return fmt.Errorf("error creating file: %s", err.Error())
+		}
+
+		log.Println("pref file created")
+	}
+
+	return nil
+}
+
+func (a *App) SaveTimeoutDuration(duration int, attempt ...int) error {
+	if len(attempt) < 1 || len(attempt) == 0 {
+		return fmt.Errorf("attempts must be length of 1, received length of %d", len(attempt))
+	}
+	attemptInt := attempt[0]
+	if attemptInt >= 3 {
+		return errors.New("max attempts reached")
+	}
+	log.Printf("attempt: %d", attemptInt)
+	appHome := appHome()
+
+	createFileErr := createPreferenceFile()
+	if createFileErr != nil {
+		return createFileErr
+	}
+
+	prefFilePath := fmt.Sprintf("%s/preferences.txt", appHome)
+	file, openFileErr := os.OpenFile(prefFilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if openFileErr != nil {
+		return openFileErr
+	}
+	durationString := strconv.Itoa(duration)
+	log.Printf("duration as string: %s", durationString)
+	bytesWritten, err := fmt.Fprintf(file, "durationTimeout=%d\n", duration)
+	if err != nil {
+		return fmt.Errorf("error writing to file: %s", err.Error())
+	}
+	log.Printf("bytes written: %v", bytesWritten)
+
+	return nil
+}
+
+func appHome() string {
 	home, err := os.UserHomeDir()
 	if err != nil {
-		panic(err)
+		return ""
 	}
-	pf := PreferencesFile{
-		Path: fmt.Sprintf("%s/Documents/clip-uploader/preferences.toml", home),
-	}
-
-	log.Printf("set path: %s", pf.Path)
-	return &pf, nil
-}
-
-func (p *PreferencesFile) File() *os.File {
-	if p.Exists() != nil {
-		p.Create()
-	}
-	file, err := os.Open(p.Path)
-	if err != nil {
-		panic(err)
-	}
-
-	return file
-}
-
-func preferencesPath() string {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		panic(err)
-	}
-	path := fmt.Sprintf("%s/Documents/clip-uploader/preferences.toml", home)
+	path := fmt.Sprintf("%s/Documents/clip-uploader", home)
 	return path
 }
 
-func (p *PreferencesFile) Create() error {
-	if p.Exists() == nil {
-		return nil
+func (a *App) SaveHost(selectedHost string, attempt ...int) error {
+	if len(attempt) < 1 || len(attempt) == 0 {
+		return fmt.Errorf("attempts must be length of 1, received length of %d", len(attempt))
 	}
-	if p.Path == "" {
-		p.Path = preferencesPath()
+	attemptInt := attempt[0]
+	if attemptInt >= 3 {
+		return errors.New("max attempts reached")
 	}
-	prefDir := fmt.Sprintf("%s/Documents/preferences.toml", p.Path)
-	log.Printf("pref dir: %s", prefDir)
+	log.Printf("attempt: %d", attemptInt)
+	appHome := appHome()
 
-	file, err := os.Stat(prefDir)
-	if err != nil {
-		_, err := os.Create(prefDir)
+	createFileErr := createPreferenceFile()
+	if createFileErr != nil {
+		return createFileErr
+	}
+	prefFilePath := fmt.Sprintf("%s/preferences.txt", appHome)
+	_, fileExistErr := os.Stat(prefFilePath)
+	if fileExistErr != nil {
+
+		_, err := os.Create(prefFilePath)
 		if err != nil {
-			log.Println("what the fuck")
-			return err
+			return fmt.Errorf("error creating file: %s", err.Error())
 		}
-		// impl creating pref file if it doesnt exist
-	}
-	log.Printf("file exists file size: %d", file.Size())
-	return nil
-}
 
-func (p *PreferencesFile) Exists() error {
-	if p.Path != "" {
-		home, err := os.UserHomeDir()
-		if err != nil {
-			return err
-		}
-		p.Path = fmt.Sprintf("%s/Documents/clip-uploader/preferences.toml", home)
+		log.Println("pref file crated")
 	}
-	_, err := os.Stat(p.Path)
+
+	file, openFileErr := os.OpenFile(prefFilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if openFileErr != nil {
+		return openFileErr
+	}
+
+	log.Printf("duration as string: %s", selectedHost)
+	bytesWritten, err := fmt.Fprintf(file, "selectedHost=%s\n", selectedHost)
 	if err != nil {
-		return err
+		return fmt.Errorf("error writing to file: %s", err.Error())
 	}
+	log.Printf("bytes written: %v", bytesWritten)
 
 	return nil
-}
-
-func (a *App) SaveTimeoutDuration(duration int) {
-	pref, err := GetPreferencesFile()
-	if err != nil {
-		panic(err)
-	}
-	if pref.Exists() != nil {
-		pref.Create()
-	}
-
-	durationString := strconv.Itoa(duration)
-	_, err = pref.File().WriteString(durationString)
-	if err != nil {
-		panic(err)
-	}
-	pref.Preferences.TimeoutDuration = duration
-}
-
-func (a *App) SaveHost(selectedHost string) {
-	pref, err := GetPreferencesFile()
-	if err != nil {
-		panic(err)
-	}
-	if pref.Exists() != nil {
-		pref.Create()
-	}
-
-	_, err = pref.File().WriteString(selectedHost)
-	if err != nil {
-		panic(err)
-	}
-	pref.Preferences.UploadHost = selectedHost
 }
 
 func (a *App) UploadViaLobfile(absPath string) {

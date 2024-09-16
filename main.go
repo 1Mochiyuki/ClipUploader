@@ -13,13 +13,6 @@ var assets embed.FS
 
 func main() {
 	// Create an instance of the app structure
-	pref, prefFileerr := GetPreferencesFile()
-	if prefFileerr != nil {
-		panic(prefFileerr)
-	}
-	if pref.Exists() != nil {
-		pref.Create()
-	}
 
 	app := NewApp()
 
