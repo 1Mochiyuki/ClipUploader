@@ -1,12 +1,23 @@
 <script>
   import { push } from "svelte-spa-router";
+  import { Hosts } from "../../wailsjs/go/main/App.js";
+  import { LogInfo } from "../../wailsjs/runtime/runtime.js";
+  import { key } from "svelte-forms-lib";
 
   export let addFileSection = () => {};
+  const getHosts = async () => {
+    let hosts = await Hosts();
+    LogInfo(`host: ${hosts["catbox"]}`);
+    console.log(`host: ${hosts["pomf"]} `);
+    Object.entries(hosts).forEach(([key, value]) => {
+      console.log(`key:value ${key}:${value}`);
+    });
+  };
 </script>
 
 <div
   class="button-div"
-  style="text-align: center;  justify-content: space-between;"
+  style="text-align: center;  justify-content: space-between; padding-top: 5px;"
 >
   <button
     class="navbar-button"
@@ -27,7 +38,7 @@
     <button class="navbar-button" on:click={addFileSection}
       >Add File Section
     </button>
-    <button class="navbar-button"> Upload All </button>
+    <button on:click={getHosts} class="navbar-button">Upload All</button>
   </div>
 
   <button

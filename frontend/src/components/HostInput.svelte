@@ -1,5 +1,7 @@
 <script>
   import { onMount } from "svelte";
+  import { LogInfo } from "../../wailsjs/runtime/runtime.js";
+  import { currentHost } from "../stores.js";
 
   export let options = [
     { value: "Catbox", label: "Catbox" },
@@ -7,7 +9,7 @@
     { value: "other", label: "other" },
   ];
   export let value = "";
-  export let placeholder = "Select an option";
+  export let placeholder = $currentHost;
   let label = "Select a host";
 
   let isOpen = false;
@@ -24,6 +26,8 @@
   const selectOption = (option) => {
     value = option.value;
     isOpen = false;
+    currentHost.set(value);
+    LogInfo(`selected host: ${value}`);
   };
 
   onMount(() => {

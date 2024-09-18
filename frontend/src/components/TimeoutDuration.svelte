@@ -1,7 +1,7 @@
 <script>
   import { LogInfo } from "../../wailsjs/runtime/runtime.js";
-  export let timeoutDuration;
-  $: timeoutDuration = `${timeoutDuration}`.toString();
+  import { currentTimeoutDuration } from "../stores.js";
+  export let timeoutDuration = $currentTimeoutDuration;
   let labelText = "Timeout Duration (Seconds)";
   let error = "";
 
@@ -14,6 +14,7 @@
       return;
     }
     error = "";
+    currentTimeoutDuration.set(timeoutDuration.toString());
     LogInfo(`Valid number entered: ${timeoutDuration}`);
 
     // Here you can perform any action with the valid number
@@ -37,7 +38,7 @@
 
 <style>
   .input-container {
-    max-width: 300px;
+    max-width: 20%;
     margin: 0 auto;
     padding: 20px;
     border-radius: 5px;
