@@ -1,6 +1,7 @@
 package main
 
 import (
+	"C2E-Wails/types"
 	"bytes"
 	"context"
 	"encoding/json"
@@ -54,12 +55,14 @@ func preferencesFileExists() error {
 	return nil
 }
 
-func (a *App) Hosts() map[string]string {
-	return map[string]string{
-		"catbox":  "Catbox",
-		"lobfile": "lobfile",
-		"pomf":    "pomf",
-		"other":   "Other",
+func (a *App) Hosts() map[string]*types.Host {
+	catbox := types.NewCatbox()
+	lobfile := types.NewLobfile()
+	pomf := types.NewPomf()
+	return map[string]*types.Host{
+		catbox.Name:  catbox,
+		lobfile.Name: lobfile,
+		pomf.Name:    pomf,
 	}
 }
 
@@ -68,7 +71,7 @@ func SetDefaultPreferences(app *App) error {
 	if setTimeoutDurationErr != nil {
 		return setTimeoutDurationErr
 	}
-	setHostErr := app.SaveHost(app.Hosts()["catbox"])
+	setHostErr := app.SaveHost(app.Hosts()["catbox"].Name)
 	if setHostErr != nil {
 		return setHostErr
 	}
