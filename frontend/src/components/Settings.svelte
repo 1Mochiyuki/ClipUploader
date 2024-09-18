@@ -3,12 +3,16 @@
   import HostInput from "./HostInput.svelte";
   import TimeoutDuration from "./TimeoutDuration.svelte";
   import { LogInfo } from "../../wailsjs/runtime/runtime.js";
-
-  export let selectedHost;
-  export let timeoutDuration;
+  import { currentHost, currentTimeoutDuration } from "../stores";
+  import { Hosts } from "../../wailsjs/go/main/App.js";
 
   const handleSaveSettings = () => {
-    LogInfo(`host: ${selectedHost}\ntimeout duration: ${timeoutDuration}`);
+    let hosts = Hosts();
+
+    LogInfo(
+      `host: ${$currentHost}\ntimeout duration: ${$currentTimeoutDuration}`,
+    );
+    LogInfo(`host but from map: ${hosts[$currentHost]}`);
   };
 </script>
 
@@ -31,12 +35,10 @@
   </button>
   <div style="justify-content: space-between; padding-top: 20px;">
     <div>
-      <HostInput bind:value={selectedHost}></HostInput>
+      <HostInput></HostInput>
 
-      <TimeoutDuration bind:timeoutDuration></TimeoutDuration>
+      <TimeoutDuration></TimeoutDuration>
     </div>
-  </div>
-  <div>
     <button class="button-4" on:click={handleSaveSettings}>Save</button>
   </div>
 </div>
