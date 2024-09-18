@@ -1,7 +1,7 @@
 <script>
   import { ChooseFile, RemovePathFromFile } from "../../wailsjs/go/main/App.js";
   import Navbar from "./Navbar.svelte";
-  import { LogPrint } from "../../wailsjs/runtime/runtime.js";
+  import { LogInfo } from "../../wailsjs/runtime/runtime.js";
   let files = [];
   $: newFileId = totalFiles ? Math.max(...files.map((f) => f.id)) + 1 : 1;
   $: totalFiles = files.length;
@@ -13,10 +13,10 @@
    **/
 
   const removeSection = (file) => {
-    LogPrint(`length: ${totalFiles} id: ${file.id}`);
+    LogInfo(`length: ${totalFiles} id: ${file.id}`);
 
     files = files.filter((x) => x.id !== file.id);
-    LogPrint(`${files}`);
+    LogInfo(`${files}`);
   };
   /**
    *
@@ -42,13 +42,13 @@
       file.fileName = name;
       placeholderText = name;
     });
-    LogPrint(`name outside promise: ${file.fileName}`);
+    LogInfo(`name outside promise: ${file.fileName}`);
   };
 
   const addFileSection = () => {
-    LogPrint(`length: ${totalFiles} id: ${newFileId}`);
+    LogInfo(`length: ${totalFiles} id: ${newFileId}`);
     files = [...files, { id: newFileId, fileName: "", filePath: "" }];
-    LogPrint(`${files}`);
+    LogInfo(`${files}`);
   };
 </script>
 

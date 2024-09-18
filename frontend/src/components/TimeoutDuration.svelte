@@ -1,19 +1,22 @@
 <script>
   import { LogInfo } from "../../wailsjs/runtime/runtime.js";
-  export let timeoutDuration = 0;
+  export let timeoutDuration;
+  $: timeoutDuration = `${timeoutDuration}`.toString();
   let labelText = "Timeout Duration (Seconds)";
   let error = "";
 
   function handleInput() {
     if (!timeoutDuration) {
       error = "Please enter a number";
+      return;
     } else if (isNaN(Number(timeoutDuration))) {
       error = "Please enter a valid number";
-    } else {
-      error = "";
-      LogInfo(`Valid number entered: ${timeoutDuration}`);
-      // Here you can perform any action with the valid number
+      return;
     }
+    error = "";
+    LogInfo(`Valid number entered: ${timeoutDuration}`);
+
+    // Here you can perform any action with the valid number
   }
 </script>
 
@@ -23,6 +26,7 @@
     type="number"
     id="numberInput"
     bind:value={timeoutDuration}
+    on:click={() => LogInfo(`duration: ${timeoutDuration}`)}
     on:input={handleInput}
     placeholder="Timeout Duration"
   />
