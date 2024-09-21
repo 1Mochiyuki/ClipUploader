@@ -37,20 +37,6 @@ func (a *App) ChooseFile() string {
 	return filename
 }
 
-func preferencesFileExists() error {
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		return err
-	}
-	pathToPref := fmt.Sprintf("%s/Documents/clip-uploader/preferences.txt", homeDir)
-
-	_, err = os.Stat(pathToPref)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 func (a *App) Hosts() map[string]types.Uploader {
 	catbox := types.NewCatbox()
 	lobfile := types.NewLobfile()
