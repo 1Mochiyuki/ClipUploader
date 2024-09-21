@@ -20,3 +20,7 @@ To build a redistributable, production mode package, use `wails build`.
 - [ ] Save settings to file
 - [ ] Actually upload to a file host
 - [ ] Add setting login information per host
+- [ ] Copy all links to clipboard
+- [ ] Notifications for when files are uploaded
+- [ ] Toggle notification sound
+- [ ] Deploy to Vercel :)
