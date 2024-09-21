@@ -2,14 +2,48 @@
   import { ChooseFile, RemovePathFromFile } from "../../wailsjs/go/main/App.js";
   import Navbar from "./Navbar.svelte";
   import { LogInfo } from "../../wailsjs/runtime/runtime.js";
-  import { currentHost, currentTimeoutDuration } from "../stores.js";
-  let files = [];
-  $: newFileId = totalFiles ? Math.max(...files.map((f) => f.id)) + 1 : 1;
-  $: totalFiles = files.length;
+  import {
+    currentHost,
+    currentTimeoutDuration,
+    currentFiles,
+  } from "../stores.js";
+  import { Upload as UploadPomf } from "../../wailsjs/go/types/Pomf.js";
+  import { Upload as UploadLobfile } from "../../wailsjs/go/types/Lobfile.js";
+  import { Upload as UploadCatbox } from "../../wailsjs/go/types/Catbox.js";
+
+  $: newFileId = totalFiles
+    ? Math.max(...$currentFiles.map((f) => f.id)) + 1
+    : 1;
+  $: totalFiles = $currentFiles.length;
   $: placeholderText = "";
   $: placeHolderEmpty = !placeholderText;
   $: LogInfo(`current host: ${$currentHost}`);
   const SELECT_A_FILE_TEXT = "Select a file";
+  /**
+   * @param {Object} file - file to upload
+   * */
+  const upload = (file) => {
+    if (!file.fileName || !$currentHost) {
+      LogInfo(`file name or current host not set`);
+      return;
+    }
+
+    LogInfo(`file name: ${file.fileName}`);
+    switch ($currentHost) {
+      case "Catbox":
+        LogInfo("catbox");
+        UploadCatbox(file.fileName);
+        break;
+      case "Lobfile":
+        LogInfo("lobfile");
+        UploadLobfile(file.fileName);
+        break;
+      case "Pomf":
+        LogInfo("pomf");
+        UploadPomf(file.fileName);
+        break;
+    }
+  };
   /**
    * @param {Object} file the currently selected file.
    **/
@@ -17,8 +51,9 @@
   const removeSection = (file) => {
     LogInfo(`length: ${totalFiles} id: ${file.id}`);
 
-    files = files.filter((x) => x.id !== file.id);
-    LogInfo(`${files}`);
+    //    $currentFiles = $currentFiles.filter((x) => x.id !== file.id/);
+    currentFiles.set($currentFiles.filter((x) => x.id !== file.id));
+    LogInfo(`${$currentFiles}`);
   };
   /**
    *
@@ -48,18 +83,18 @@
 
   const addFileSection = () => {
     LogInfo(`length: ${totalFiles} id: ${newFileId}`);
-    files = [...files, { id: newFileId, fileName: "", filePath: "" }];
-    LogInfo(`${files}`);
+    $currentFiles = [
+      ...$currentFiles,
+      { id: newFileId, fileName: "", filePath: "" },
+    ];
+    LogInfo(`${$currentFiles}`);
   };
 </script>
 
 <Navbar {addFileSection} />
 <div>
-  <span>
-    {`access from different component:\nhost: ${$currentHost} timeout: ${$currentTimeoutDuration}`}
-  </span>
   <ul aria-labelledby="list-heading">
-    {#each files as file}
+    {#each $currentFiles as file}
       <li>
         <div class="btn-div">
           <button
@@ -77,6 +112,22 @@
               /></svg
             ></button
           >
+          <button
+            class="button-4"
+            style="padding-bottom: 3px; width: 100px;"
+            on:click={() => upload(file)}
+            ><svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24px"
+              viewBox="0 -960 960 960"
+              width="34px"
+              fill="#000000"
+              ><path
+                d="M440-200h80v-167l64 64 56-57-160-160-160 160 57 56 63-63v167ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"
+              /></svg
+            ></button
+          >
+
           <button
             class="button-4"
             style="padding-bottom: 3px; width: 100px;"

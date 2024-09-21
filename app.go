@@ -2,19 +2,15 @@ package main
 
 import (
 	"C2E-Wails/types"
-	"bytes"
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 	"strconv"
 	"strings"
 
 	"github.com/sqweek/dialog"
-	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 // App struct
@@ -79,37 +75,6 @@ func SetDefaultPreferences(app *App) error {
 	return nil
 }
 
-func createPreferenceFile() error {
-	appHome := appHome()
-
-	_, appHomeExists := os.Stat(appHome)
-	if appHomeExists != nil {
-
-		makeAppHomeErr := os.Mkdir(appHome, 0755)
-		if makeAppHomeErr != nil {
-			return fmt.Errorf("error creating app home directory: %s", makeAppHomeErr.Error())
-		}
-		log.Println("app home created, trying to write to file again")
-		createPreferenceFile()
-		return nil
-
-	}
-	log.Println("app directory created")
-	prefFilePath := fmt.Sprintf("%s/preferences.txt", appHome)
-	_, fileExistErr := os.Stat(prefFilePath)
-	if fileExistErr != nil {
-
-		_, err := os.Create(prefFilePath)
-		if err != nil {
-			return fmt.Errorf("error creating file: %s", err.Error())
-		}
-
-		log.Println("pref file created")
-	}
-
-	return nil
-}
-
 func (a *App) SaveTimeoutDuration(duration int, attempt ...int) error {
 	if len(attempt) < 1 || len(attempt) == 0 {
 		return fmt.Errorf("attempts must be length of 1, received length of %d", len(attempt))
@@ -119,9 +84,9 @@ func (a *App) SaveTimeoutDuration(duration int, attempt ...int) error {
 		return errors.New("max attempts reached")
 	}
 	log.Printf("attempt: %d", attemptInt)
-	appHome := appHome()
+	appHome := types.AppHome()
 
-	createFileErr := createPreferenceFile()
+	createFileErr := types.CreatePreferenceFile()
 	if createFileErr != nil {
 		return createFileErr
 	}
@@ -142,15 +107,6 @@ func (a *App) SaveTimeoutDuration(duration int, attempt ...int) error {
 	return nil
 }
 
-func appHome() string {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return ""
-	}
-	path := fmt.Sprintf("%s/Documents/clip-uploader", home)
-	return path
-}
-
 func (a *App) SaveHost(selectedHost types.Uploader, attempt ...int) error {
 	if len(attempt) < 1 || len(attempt) == 0 {
 		return fmt.Errorf("attempts must be length of 1, received length of %d", len(attempt))
@@ -160,9 +116,9 @@ func (a *App) SaveHost(selectedHost types.Uploader, attempt ...int) error {
 		return errors.New("max attempts reached")
 	}
 	log.Printf("attempt: %d", attemptInt)
-	appHome := appHome()
+	appHome := types.AppHome()
 
-	createFileErr := createPreferenceFile()
+	createFileErr := types.CreatePreferenceFile()
 	if createFileErr != nil {
 		return createFileErr
 	}
@@ -215,40 +171,6 @@ func (a *App) SaveHost(selectedHost types.Uploader, attempt ...int) error {
 	}
 
 	return nil
-}
-
-func (a *App) UploadViaLobfile(absPath string) {
-	// impl upload to lobfile docs: https://lobfile.com/api/v3/docs/
-}
-
-func (a *App) UploadViaPomf(absPath string) {
-	log.Printf("uploading: %s to", absPath)
-	fileInfo, err := os.Stat(absPath)
-	if err != nil {
-		panic(err)
-	}
-	if fileInfo.Size() > (1024 * 1024 * 1024) {
-		msg := fmt.Sprintf("File: %s is over the 1 GB limit.\nSize: %d", fileInfo.Name(), fileInfo.Size())
-		runtime.MessageDialog(a.ctx, runtime.MessageDialogOptions{
-			Type:          runtime.ErrorDialog,
-			Title:         "File Size Limit",
-			Message:       msg,
-			DefaultButton: "OK",
-		})
-		return
-	}
-	files := map[string]string{"files[]:": absPath}
-	data, err := json.Marshal(files)
-	if err != nil {
-		panic(err)
-	}
-
-	resp, err := http.Post("", "application/json", bytes.NewBuffer(data))
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	defer resp.Body.Close()
 }
 
 func (a *App) RemovePathFromFile(fileName string) string {

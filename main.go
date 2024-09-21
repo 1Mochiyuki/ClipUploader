@@ -12,8 +12,7 @@ import (
 //go:embed all:frontend/dist
 var assets embed.FS
 
-func testUpload(host types.Uploader) {
-	host.Upload()
+func test() {
 }
 
 func main() {
@@ -21,6 +20,7 @@ func main() {
 	catbox := types.NewCatbox()
 	pomf := types.NewPomf()
 	lobfile := types.NewLobfile()
+
 	app := NewApp()
 
 	// Create application with options

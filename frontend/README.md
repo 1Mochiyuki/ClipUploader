@@ -18,8 +18,8 @@ and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
 
 **Why use this over SvelteKit?**
 
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
++ It brings its own routing solution which might not be preferable for some users.
++ It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
   `vite dev` and `vite build` wouldn't work in a SvelteKit environment, for example.
 
 This template contains as little as possible to get started with Vite + Svelte, while taking into account the developer

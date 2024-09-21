@@ -21,11 +21,3 @@ export function SaveHost(arg1, arg2) {
 export function SaveTimeoutDuration(arg1, arg2) {
   return window['go']['main']['App']['SaveTimeoutDuration'](arg1, arg2);
 }
-
-export function UploadViaLobfile(arg1) {
-  return window['go']['main']['App']['UploadViaLobfile'](arg1);
-}
-
-export function UploadViaPomf(arg1) {
-  return window['go']['main']['App']['UploadViaPomf'](arg1);
-}

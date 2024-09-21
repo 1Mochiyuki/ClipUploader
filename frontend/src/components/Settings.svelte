@@ -5,10 +5,24 @@
   import { LogInfo } from "../../wailsjs/runtime/runtime.js";
   import { currentHost, currentTimeoutDuration } from "../stores";
   import { Hosts } from "../../wailsjs/go/main/App.js";
+  import { Upload as UploadPomf } from "../../wailsjs/go/types/Pomf.js";
+  import { Upload as UploadLobfile } from "../../wailsjs/go/types/Lobfile.js";
+  import { Upload as UploadCatbox } from "../../wailsjs/go/types/Catbox.js";
 
-  const handleSaveSettings = () => {
+  const handleSaveSettings = async () => {
     let hosts = Hosts();
 
+    await UploadCatbox().then(() => {
+      LogInfo("done w catbox in js");
+    });
+
+    await UploadPomf().then(() => {
+      LogInfo("done w pomf in js");
+    });
+
+    await UploadLobfile().then(() => {
+      LogInfo("done w lobfile in js");
+    });
     LogInfo(
       `host: ${$currentHost}\ntimeout duration: ${$currentTimeoutDuration}`,
     );
