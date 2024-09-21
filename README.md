@@ -17,6 +17,6 @@ To build a redistributable, production mode package, use `wails build`.
 
 ## Roadmap
 
-[ ] Save settings to file
-[ ] Actually upload to a file host
-[ ] Add setting login information per host
+- [ ] Save settings to file
+- [ ] Actually upload to a file host
+- [ ] Add setting login information per host
