@@ -20,6 +20,7 @@ func main() {
 	catbox := types.NewCatbox()
 	pomf := types.NewPomf()
 	lobfile := types.NewLobfile()
+	jsfile := types.NewJSFile("", "")
 
 	app := NewApp()
 
@@ -36,6 +37,7 @@ func main() {
 		OnStartup:        app.startup,
 		Bind: []interface{}{
 			app,
+			jsfile,
 			catbox,
 			pomf,
 			lobfile,
