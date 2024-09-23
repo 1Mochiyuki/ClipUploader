@@ -17,10 +17,13 @@ To build a redistributable, production mode package, use `wails build`.
 
 ## Roadmap
 
+- [ ] Create perfences file (if doesnt exist) with sane defaults
 - [ ] Save settings to file
+- [ ] Add auth to file hosts
 - [ ] Actually upload to a file host
+- [ ] Add retrieving upload history
 - [ ] Add setting login information per host
 - [ ] Copy all links to clipboard
-- [ ] Notifications for when files are uploaded
+- [ ] Notification for when files are uploaded
 - [ ] Toggle notification sound
 - [ ] Deploy to Vercel :)
