@@ -1,15 +1,15 @@
 package main
 
 import (
-	"C2E-Wails/types"
+	"C2E-Wails/go/types"
 	"context"
 	"errors"
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 	"strings"
 
+	"github.com/charmbracelet/log"
 	"github.com/sqweek/dialog"
 )
 
@@ -27,6 +27,12 @@ func NewApp() *App {
 // so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
+	err := types.CreatePreferenceFile()
+	if err != nil {
+		log.Fatalf("err: %s", err)
+		return
+	}
+	log.Info("SUCCESS")
 }
 
 func (a *App) ChooseFile() string {
@@ -69,7 +75,7 @@ func (a *App) SaveTimeoutDuration(duration int, attempt ...int) error {
 	if attemptInt >= 3 {
 		return errors.New("max attempts reached")
 	}
-	log.Printf("attempt: %d", attemptInt)
+	log.Info("attempt: ", "attempt", attemptInt)
 	appHome := types.AppHome()
 
 	createFileErr := types.CreatePreferenceFile()
@@ -83,12 +89,12 @@ func (a *App) SaveTimeoutDuration(duration int, attempt ...int) error {
 		return openFileErr
 	}
 	durationString := strconv.Itoa(duration)
-	log.Printf("duration as string: %s", durationString)
+	log.Info("duration as string: ", "duration", durationString)
 	bytesWritten, err := fmt.Fprintf(file, "durationTimeout=%d\n", duration)
 	if err != nil {
 		return fmt.Errorf("error writing to file: %s", err.Error())
 	}
-	log.Printf("bytes written: %v", bytesWritten)
+	log.Info("bytes written: %v", bytesWritten)
 
 	return nil
 }
@@ -101,7 +107,7 @@ func (a *App) SaveHost(selectedHost types.Uploader, attempt ...int) error {
 	if attemptInt >= 3 {
 		return errors.New("max attempts reached")
 	}
-	log.Printf("attempt: %d", attemptInt)
+	log.Info("attempt: %d", attemptInt)
 	appHome := types.AppHome()
 
 	createFileErr := types.CreatePreferenceFile()
@@ -117,7 +123,7 @@ func (a *App) SaveHost(selectedHost types.Uploader, attempt ...int) error {
 			return fmt.Errorf("error creating file: %s", err.Error())
 		}
 
-		log.Println("pref file crated")
+		log.Info("log file created")
 	}
 
 	file, openFileErr := os.OpenFile(prefFilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
@@ -125,11 +131,11 @@ func (a *App) SaveHost(selectedHost types.Uploader, attempt ...int) error {
 		return openFileErr
 	}
 
-	log.Printf("duration as string: %s", selectedHost)
+	log.Info("duration as string: ", "duration", selectedHost)
 	switch currHost := selectedHost.(type) {
 	case *types.Catbox:
 
-		log.Printf("host: %s", currHost.Name)
+		log.Info("host: %s", currHost.Name)
 		_, err := fmt.Fprintf(file, "selectedHost=%s\n", selectedHost)
 		if err != nil {
 			return fmt.Errorf("error writing to file: %s", err.Error())
@@ -137,7 +143,7 @@ func (a *App) SaveHost(selectedHost types.Uploader, attempt ...int) error {
 
 	case *types.Lobfile:
 
-		log.Printf("host: %s", currHost.Name)
+		log.Info("host: %s", currHost.Name)
 		_, err := fmt.Fprintf(file, "selectedHost=%s\n", selectedHost)
 		if err != nil {
 			return fmt.Errorf("error writing to file: %s", err.Error())
@@ -145,14 +151,14 @@ func (a *App) SaveHost(selectedHost types.Uploader, attempt ...int) error {
 
 	case *types.Pomf:
 
-		log.Printf("host: %s", currHost.Name)
+		log.Info("host: %s", currHost.Name)
 		_, err := fmt.Fprintf(file, "selectedHost=%s\n", selectedHost)
 		if err != nil {
 			return fmt.Errorf("error writing to file: %s", err.Error())
 		}
 
 	default:
-		log.Println("what the fuck")
+		log.Info("what the fuck")
 
 	}
 
@@ -164,13 +170,13 @@ func (a *App) RemovePathFromFile(fileName string) string {
 	if strings.Contains(fileName, "\\") {
 		parts := strings.Split(fileName, "\\")
 		name = parts[len(parts)-1]
-		fmt.Printf("new name (Go): %s\n", name)
+		log.Info("new name (Go): ", "name", name)
 		return name
 	}
 	if strings.Contains(fileName, "/") {
 		parts := strings.Split(fileName, "/")
 		name = parts[len(parts)-1]
-		fmt.Printf("new name (Go): %s\n", name)
+		log.Info("new name (Go): ", "name", name)
 
 		return name
 	}

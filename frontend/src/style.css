@@ -54,7 +54,9 @@ body {
   box-sizing: border-box;
   color: #24292e;
   cursor: pointer;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-family: "Montserrat", serif;
   font-size: 1.25rem;
   /* Base font size */
@@ -71,6 +73,7 @@ body {
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
+
   vertical-align: middle;
   white-space: nowrap;
   word-wrap: break-word;

@@ -12,7 +12,7 @@
   $: totalFiles = currentFiles.length;
   $: LogInfo(`current host: ${$currentHost}`);
   let currentFiles = [];
-
+  let width = 10;
   const addFileSection = () => {
     LogInfo(`length: ${totalFiles} id: ${newFileId}`);
     storedFiles.set([
@@ -30,9 +30,14 @@
     {#each $storedFiles as file}
       <li>
         <div class="btn-div">
-          <RemoveSection currentFiles={$storedFiles} {file} {totalFiles} />
-          <UploadFile {file} />
-          <SelectFile id={file.id} />
+          <RemoveSection
+            currentFiles={$storedFiles}
+            {file}
+            {totalFiles}
+            {width}
+          />
+          <UploadFile {file} {width} />
+          <SelectFile id={file.id} {width} />
           <span class="fileName-text">{file.fileName}</span>
         </div>
       </li>

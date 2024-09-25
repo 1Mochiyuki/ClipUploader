@@ -2,8 +2,9 @@ package types
 
 import (
 	"fmt"
-	"log"
 	"os"
+
+	"github.com/charmbracelet/log"
 )
 
 type Preferences struct {
@@ -16,17 +17,19 @@ func CreatePreferenceFile() error {
 
 	_, appHomeExists := os.Stat(appHome)
 	if appHomeExists != nil {
+		log.Info("app home doesnt exist, creating now")
 
 		makeAppHomeErr := os.Mkdir(appHome, 0755)
 		if makeAppHomeErr != nil {
 			return fmt.Errorf("error creating app home directory: %s", makeAppHomeErr.Error())
 		}
-		log.Println("app home created, trying to write to file again")
+		log.Info("app home created, trying to write to file again")
 		CreatePreferenceFile()
 		return nil
 
+	} else {
+		log.Info("app home already exists")
 	}
-	log.Println("app directory created")
 	prefFilePath := fmt.Sprintf("%s/preferences.txt", appHome)
 	_, fileExistErr := os.Stat(prefFilePath)
 	if fileExistErr != nil {
@@ -36,8 +39,10 @@ func CreatePreferenceFile() error {
 			return fmt.Errorf("error creating file: %s", err.Error())
 		}
 
-		log.Println("pref file created")
+		log.Info("pref file created")
+		return nil
 	}
+	log.Info("preferences file already exists")
 
 	return nil
 }

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"C2E-Wails/types"
+	"C2E-Wails/go/types"
 	"embed"
 
 	"github.com/wailsapp/wails/v2"
@@ -20,7 +20,6 @@ func main() {
 	catbox := types.NewCatbox()
 	pomf := types.NewPomf()
 	lobfile := types.NewLobfile()
-	jsfile := types.NewJSFile("", "")
 
 	app := NewApp()
 
@@ -37,12 +36,10 @@ func main() {
 		OnStartup:        app.startup,
 		Bind: []interface{}{
 			app,
-			jsfile,
 			catbox,
 			pomf,
 			lobfile,
 		},
-		Logger: nil,
 	})
 	if err != nil {
 		println("error: ", err.Error())
