@@ -17,7 +17,7 @@ To build a redistributable, production mode package, use `wails build`.
 
 ## Roadmap
 
-- [ ] Create perfences file (if doesnt exist) with sane defaults
+- [x] Create perfences file (if doesnt exist) with sane defaults
 - [ ] Save settings to file
 - [ ] Add auth to file hosts
 - [ ] Actually upload to a file host

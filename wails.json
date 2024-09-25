@@ -1,10 +1,10 @@
 {
   "$schema": "https://wails.io/schemas/config.v2.json",
-  "name": "ClipUploader",
+  "name": "Clip Uploader",
   "outputfilename": "ClipUploader",
   "frontend:install": "pnpm install",
   "frontend:build": "pnpm run build",
-  "frontend:dev:watcher": "pnpm run dev",
+  "frontend:dev:watcher": "pnpm run dev --host",
   "frontend:dev:serverUrl": "auto",
   "author": {
     "name": "7Yuki",
