@@ -1,17 +1,21 @@
 <script>
   import { push } from "svelte-spa-router";
-  import { Hosts } from "../../wailsjs/go/main/App.js";
+  import { HostList } from "../../wailsjs/go/main/App.js";
   import { LogInfo } from "../../wailsjs/runtime/runtime.js";
-  import { key } from "svelte-forms-lib";
+  import { currentHost, currentUploadUrl } from "../stores";
 
   export let addFileSection = () => {};
   const getHosts = async () => {
-    let hosts = await Hosts();
-    LogInfo(`host: ${hosts["catbox"]}`);
-    console.log(`host: ${hosts["pomf"]} `);
-    Object.entries(hosts).forEach(([key, value]) => {
-      console.log(`key:value ${key}:${value}`);
-    });
+    const hosts = await HostList();
+
+    let currHost = $currentHost;
+    LogInfo(`[BLEHHHHHHHH] curr host: ${currHost}`);
+    const catbox = Object.values(hosts[currHost])[1];
+    currentUploadUrl.set(catbox);
+
+    LogInfo(
+      `[CURRENT HOST INFORMATION] keys: ${Object.keys(hosts)} | upload url: ${$currentUploadUrl}`,
+    );
   };
 </script>
 

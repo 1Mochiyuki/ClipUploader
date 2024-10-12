@@ -5,12 +5,16 @@ import (
 	"os"
 
 	"github.com/charmbracelet/log"
+	"github.com/fsnotify/fsnotify"
+	"github.com/spf13/viper"
 )
 
 type Preferences struct {
 	UploadHost      string
 	TimeoutDuration int
 }
+
+const FILE_NAME = "preferences.toml"
 
 func CreatePreferenceFile() error {
 	appHome := AppHome()
@@ -30,7 +34,7 @@ func CreatePreferenceFile() error {
 	} else {
 		log.Info("app home already exists")
 	}
-	prefFilePath := fmt.Sprintf("%s/preferences.txt", appHome)
+	prefFilePath := fmt.Sprintf("%s/%s", appHome, FILE_NAME)
 	_, fileExistErr := os.Stat(prefFilePath)
 	if fileExistErr != nil {
 
@@ -44,6 +48,30 @@ func CreatePreferenceFile() error {
 	}
 	log.Info("preferences file already exists")
 
+	return nil
+}
+
+func CreatePrefFileViper() error {
+	viper.SetConfigName("preferences")
+	viper.SetConfigType("toml")
+	viper.AddConfigPath(AppHome())
+	err := viper.ReadInConfig()
+	if err != nil {
+		viper.Set("config.host", "Catbox")
+		viper.Set("config.timeout", 5000)
+		writeErr := viper.SafeWriteConfig()
+		if writeErr != nil {
+			panic(writeErr)
+		}
+		log.Info("CONFIG CREATION SUCCESS")
+
+	}
+	viper.OnConfigChange(func(e fsnotify.Event) {
+		log.Info("CONFIG CHANGED", "msg", e.Name)
+	})
+	viper.WatchConfig()
+
+	log.Info("CONFIG WATCH SUCCESS")
 	return nil
 }
 

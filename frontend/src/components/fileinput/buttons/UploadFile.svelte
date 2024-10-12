@@ -2,7 +2,7 @@
   import { Upload as UploadPomf } from "../../../../wailsjs/go/types/Pomf.js";
   import { Upload as UploadLobfile } from "../../../../wailsjs/go/types/Lobfile.js";
   import { Upload as UploadCatbox } from "../../../../wailsjs/go/types/Catbox.js";
-  import { currentHost, currentFiles as storedFiles } from "../../../stores.js";
+  import { currentHost, currentFiles as storedFiles } from "../../../stores";
   import { LogInfo } from "../../../../wailsjs/runtime/runtime.js";
 
   export let width;

@@ -1,6 +1,6 @@
 <script>
   import { LogInfo } from "../../../../wailsjs/runtime/runtime.js";
-  import { currentFiles as storedFiles } from "../../../stores.js";
+  import { currentFiles as storedFiles } from "../../../stores";
   export let file;
   export let currentFiles;
   export let totalFiles;
@@ -12,7 +12,6 @@
   const removeSection = (file) => {
     LogInfo(`length: ${totalFiles} id: ${file.id}`);
 
-    //    currentFiles = currentFiles.filter((x) => x.id !== file.id/);
     storedFiles.set(currentFiles.filter((x) => x.id !== file.id));
     storedFiles.update(() => (currentFiles = $storedFiles));
     LogInfo(`${currentFiles} `);

@@ -3,13 +3,11 @@ package main
 import (
 	"C2E-Wails/go/types"
 	"context"
-	"errors"
 	"fmt"
-	"os"
-	"strconv"
 	"strings"
 
 	"github.com/charmbracelet/log"
+	"github.com/spf13/viper"
 	"github.com/sqweek/dialog"
 )
 
@@ -27,11 +25,8 @@ func NewApp() *App {
 // so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
-	err := types.CreatePreferenceFile()
-	if err != nil {
-		log.Fatalf("err: %s", err)
-		return
-	}
+
+	types.CreatePrefFileViper()
 	log.Info("SUCCESS")
 }
 
@@ -43,7 +38,7 @@ func (a *App) ChooseFile() string {
 	return filename
 }
 
-func (a *App) Hosts() map[string]types.Uploader {
+func (a *App) HostList() map[string]types.Uploader {
 	catbox := types.NewCatbox()
 	lobfile := types.NewLobfile()
 	pomf := types.NewPomf()
@@ -54,114 +49,36 @@ func (a *App) Hosts() map[string]types.Uploader {
 	}
 }
 
-func SetDefaultPreferences(app *App) error {
-	setTimeoutDurationErr := app.SaveTimeoutDuration(5000)
-	if setTimeoutDurationErr != nil {
-		return setTimeoutDurationErr
-	}
-	setHostErr := app.SaveHost(app.Hosts()["lobfile"])
-	if setHostErr != nil {
-		return setHostErr
-	}
-
-	return nil
+func (a *App) GetHost() string {
+	return viper.GetString("config.host")
 }
 
-func (a *App) SaveTimeoutDuration(duration int, attempt ...int) error {
-	if len(attempt) < 1 || len(attempt) == 0 {
-		return fmt.Errorf("attempts must be length of 1, received length of %d", len(attempt))
-	}
-	attemptInt := attempt[0]
-	if attemptInt >= 3 {
-		return errors.New("max attempts reached")
-	}
-	log.Info("attempt: ", "attempt", attemptInt)
-	appHome := types.AppHome()
+func (a *App) GetTimeout() int {
+	return viper.GetInt("config.timeout")
+}
 
-	createFileErr := types.CreatePreferenceFile()
-	if createFileErr != nil {
-		return createFileErr
+func (a *App) SaveTimeoutDuration(duration int) error {
+	if duration <= 0 {
+		return fmt.Errorf("duration must be greater than 0, received: %d", duration)
 	}
-
-	prefFilePath := fmt.Sprintf("%s/preferences.txt", appHome)
-	file, openFileErr := os.OpenFile(prefFilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if openFileErr != nil {
-		return openFileErr
-	}
-	durationString := strconv.Itoa(duration)
-	log.Info("duration as string: ", "duration", durationString)
-	bytesWritten, err := fmt.Fprintf(file, "durationTimeout=%d\n", duration)
+	viper.Set("config.timeout", duration)
+	err := viper.WriteConfig()
 	if err != nil {
-		return fmt.Errorf("error writing to file: %s", err.Error())
+		fmt.Println("balls")
+		return fmt.Errorf("error saving timout: %v", err)
 	}
-	log.Info("bytes written: %v", bytesWritten)
-
 	return nil
 }
 
-func (a *App) SaveHost(selectedHost types.Uploader, attempt ...int) error {
-	if len(attempt) < 1 || len(attempt) == 0 {
-		return fmt.Errorf("attempts must be length of 1, received length of %d", len(attempt))
+func (a *App) SaveHost(selectedHost string) error {
+	if selectedHost == "" {
+		return fmt.Errorf("host must not be empty")
 	}
-	attemptInt := attempt[0]
-	if attemptInt >= 3 {
-		return errors.New("max attempts reached")
+	viper.Set("config.host", selectedHost)
+	err := viper.WriteConfig()
+	if err != nil {
+		return fmt.Errorf("error saving timeout :%v", err)
 	}
-	log.Info("attempt: %d", attemptInt)
-	appHome := types.AppHome()
-
-	createFileErr := types.CreatePreferenceFile()
-	if createFileErr != nil {
-		return createFileErr
-	}
-	prefFilePath := fmt.Sprintf("%s/preferences.txt", appHome)
-	_, fileExistErr := os.Stat(prefFilePath)
-	if fileExistErr != nil {
-
-		_, err := os.Create(prefFilePath)
-		if err != nil {
-			return fmt.Errorf("error creating file: %s", err.Error())
-		}
-
-		log.Info("log file created")
-	}
-
-	file, openFileErr := os.OpenFile(prefFilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if openFileErr != nil {
-		return openFileErr
-	}
-
-	log.Info("duration as string: ", "duration", selectedHost)
-	switch currHost := selectedHost.(type) {
-	case *types.Catbox:
-
-		log.Info("host: %s", currHost.Name)
-		_, err := fmt.Fprintf(file, "selectedHost=%s\n", selectedHost)
-		if err != nil {
-			return fmt.Errorf("error writing to file: %s", err.Error())
-		}
-
-	case *types.Lobfile:
-
-		log.Info("host: %s", currHost.Name)
-		_, err := fmt.Fprintf(file, "selectedHost=%s\n", selectedHost)
-		if err != nil {
-			return fmt.Errorf("error writing to file: %s", err.Error())
-		}
-
-	case *types.Pomf:
-
-		log.Info("host: %s", currHost.Name)
-		_, err := fmt.Fprintf(file, "selectedHost=%s\n", selectedHost)
-		if err != nil {
-			return fmt.Errorf("error writing to file: %s", err.Error())
-		}
-
-	default:
-		log.Info("what the fuck")
-
-	}
-
 	return nil
 }
 

@@ -1,15 +1,16 @@
 <script>
   import { onMount } from "svelte";
   import { LogInfo } from "../../wailsjs/runtime/runtime.js";
-  import { currentHost } from "../stores.js";
+  import { currentHost } from "../stores";
+  import { GetHost, HostList } from "../../wailsjs/go/main/App.js";
 
   export let options = [
-    { value: "Catbox", label: "Catbox" },
-    { value: "pomf", label: "pomf" },
-    { value: "other", label: "other" },
+    { value: "Catbox" },
+    { value: "Pomf" },
+    { value: "other" },
   ];
+
   export let value = "";
-  export let placeholder = $currentHost;
   let label = "Select a host";
 
   let isOpen = false;
@@ -39,14 +40,14 @@
 
     let maxWidth = 0;
     options.forEach((option) => {
-      tempElement.textContent = option.label;
+      tempElement.textContent = option.value;
       const width = tempElement.offsetWidth;
       if (width > maxWidth) {
         maxWidth = width;
       }
     });
 
-    tempElement.textContent = placeholder;
+    tempElement.textContent = $currentHost;
     const placeholderWidth = tempElement.offsetWidth;
     if (placeholderWidth > maxWidth) {
       maxWidth = placeholderWidth;
@@ -71,7 +72,7 @@
       aria-expanded={isOpen}
     >
       <span class="select-value">
-        {value ? value : placeholder}
+        {value ? value : $currentHost}
       </span>
       <span class="select-arrow">
         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor">
@@ -96,7 +97,7 @@
               role="option"
               aria-selected={option.value === value}
             >
-              {option.label}
+              {option.value}
               {#if option.value === value}
                 <span class="select-check">
                   <svg viewBox="0 0 20 20" fill="currentColor">

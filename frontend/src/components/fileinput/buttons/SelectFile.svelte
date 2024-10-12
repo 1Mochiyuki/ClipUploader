@@ -1,9 +1,6 @@
 <script>
   import { LogInfo } from "../../../../wailsjs/runtime/runtime.js";
-  import {
-    currentFiles as storedFiles,
-    updateFileName,
-  } from "../../../stores.js";
+  import { currentFiles as storedFiles, updateFileName } from "../../../stores";
   import {
     ChooseFile,
     RemovePathFromFile,
@@ -24,7 +21,7 @@
     });
     await RemovePathFromFile(file.absPath).then((name) => {
       LogInfo(`id from SelectFile.svelte: ${file.id}`);
-      updateFileName(id, name);
+      updateFileName(file.id, name);
     });
     LogInfo(`name outside promise: ${file.fileName}`);
   };

@@ -1,7 +1,7 @@
 <script>
   import Navbar from "./Navbar.svelte";
   import { LogInfo } from "../../wailsjs/runtime/runtime.js";
-  import { currentHost, currentFiles as storedFiles } from "../stores.js";
+  import { currentHost, currentFiles as storedFiles } from "../stores";
   import RemoveSection from "./fileinput/buttons/RemoveSection.svelte";
   import UploadFile from "./fileinput/buttons/UploadFile.svelte";
   import SelectFile from "./fileinput/buttons/SelectFile.svelte";

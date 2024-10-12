@@ -12,9 +12,6 @@ import (
 //go:embed all:frontend/dist
 var assets embed.FS
 
-func test() {
-}
-
 func main() {
 	// Create an instance of the app structure
 	catbox := types.NewCatbox()

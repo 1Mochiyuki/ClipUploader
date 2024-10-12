@@ -1,16 +1,57 @@
 <script>
   import { push } from "svelte-spa-router";
+  import {
+    GetHost,
+    GetTimeout,
+    HostList,
+    SaveHost,
+    SaveTimeoutDuration,
+  } from "../../wailsjs/go/main/App.js";
   import HostInput from "./HostInput.svelte";
   import TimeoutDuration from "./TimeoutDuration.svelte";
-  import { LogInfo } from "../../wailsjs/runtime/runtime.js";
   import { currentHost, currentTimeoutDuration } from "../stores";
-  import { Hosts } from "../../wailsjs/go/main/App.js";
+  import { LogInfo } from "../../wailsjs/runtime/runtime.js";
+
+  const getPlaceholders = async () => {
+    const host = await GetHost();
+    LogInfo(`got value: ${host}`);
+    const duration = await GetTimeout();
+    LogInfo(`got value: ${duration}`);
+    currentHost.set(host);
+    currentTimeoutDuration.set(duration);
+  };
+
+  getPlaceholders();
 
   const handleSaveSettings = async () => {
-    let hosts = Hosts();
+    let timeout = Number($currentTimeoutDuration);
+    let host = $currentHost;
+    let savedHost = await GetHost();
+    let savedTimeout = await GetTimeout();
 
-    LogInfo(`host but from map: ${hosts[$currentHost]}`);
+    if (savedTimeout === timeout && savedHost === host) {
+      LogInfo("values are the same !!");
+      return;
+    }
+    if (savedHost !== host) {
+      LogInfo(`saving host: ${$currentHost} type: ${typeof $currentHost}`);
+      await SaveHost(host);
+    }
+
+    if (savedTimeout !== timeout) {
+      LogInfo(`saving timeout: ${timeout} type: ${typeof timeout}`);
+      await SaveTimeoutDuration(timeout);
+    }
   };
+
+  async function testThing() {
+    const hosts = await HostList();
+    let currHost = $currentHost;
+    LogInfo(`curr host: ${currHost}`);
+    const catbox = Object.values(hosts[currHost])[1];
+
+    LogInfo(`keys: ${Object.keys(hosts)} | values: ${catbox}`);
+  }
 </script>
 
 <div>
@@ -36,7 +77,10 @@
 
       <TimeoutDuration></TimeoutDuration>
     </div>
-    <button class="button-4" on:click={handleSaveSettings}>Save</button>
+    <button id="save-btn" class="button-4" on:click={handleSaveSettings}
+      >Save</button
+    >
+    <button class="button-4" on:click={testThing}>Test</button>
   </div>
 </div>
 

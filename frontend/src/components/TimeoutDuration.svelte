@@ -1,21 +1,20 @@
 <script>
   import { LogInfo } from "../../wailsjs/runtime/runtime.js";
-  import { currentTimeoutDuration } from "../stores.js";
-  export let timeoutDuration = $currentTimeoutDuration;
+  import { currentTimeoutDuration } from "../stores";
   let labelText = "Timeout Duration (Seconds)";
   let error = "";
 
   function handleInput() {
-    if (!timeoutDuration) {
+    if (!$currentTimeoutDuration) {
       error = "Please enter a number";
       return;
-    } else if (isNaN(Number(timeoutDuration))) {
+    } else if (isNaN(Number($currentTimeoutDuration))) {
       error = "Please enter a valid number";
       return;
     }
     error = "";
-    currentTimeoutDuration.set(timeoutDuration.toString());
-    LogInfo(`Valid number entered: ${timeoutDuration}`);
+    LogInfo(`Valid number entered: ${$currentTimeoutDuration}`);
+    currentTimeoutDuration.set($currentTimeoutDuration);
 
     // Here you can perform any action with the valid number
   }
@@ -26,8 +25,8 @@
   <input
     type="number"
     id="numberInput"
-    bind:value={timeoutDuration}
-    on:click={() => LogInfo(`duration: ${timeoutDuration}`)}
+    bind:value={$currentTimeoutDuration}
+    on:click={() => LogInfo(`duration: ${$currentTimeoutDuration}`)}
     on:input={handleInput}
     placeholder="Timeout Duration"
   />
