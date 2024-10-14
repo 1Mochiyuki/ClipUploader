@@ -9,7 +9,7 @@ require (
 	github.com/fsnotify/fsnotify v1.7.0
 	github.com/spf13/viper v1.19.0
 	github.com/sqweek/dialog v0.0.0-20240226140203-065105509627
-	github.com/wailsapp/wails/v2 v2.9.2
+	github.com/wailsapp/wails/v2 v2.9.1
 )
 
 require (

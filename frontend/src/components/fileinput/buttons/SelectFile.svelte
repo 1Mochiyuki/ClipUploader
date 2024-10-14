@@ -6,19 +6,19 @@
     RemovePathFromFile,
   } from "../../../../wailsjs/go/main/App.js";
 
-  export let id;
+  export let fileId;
   export let width;
-  let file = $storedFiles.find(
-    (f) => f.id === id || { fileName: "Select a file" },
-  );
+  let file = $storedFiles.find((f) => f.id === fileId);
 
   /**
    * @param {Object} file the currently selected file.
    **/
   const handleChooseFile = async (file) => {
+    LogInfo(`[CHOOSE FILE] ${file.id}`);
     await ChooseFile().then((absPath) => {
       file.absPath = absPath;
     });
+
     await RemovePathFromFile(file.absPath).then((name) => {
       LogInfo(`id from SelectFile.svelte: ${file.id}`);
       updateFileName(file.id, name);

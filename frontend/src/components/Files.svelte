@@ -1,14 +1,15 @@
 <script>
-  import Navbar from "./Navbar.svelte";
   import { LogInfo } from "../../wailsjs/runtime/runtime.js";
   import { currentHost, currentFiles as storedFiles } from "../stores";
   import RemoveSection from "./fileinput/buttons/RemoveSection.svelte";
-  import UploadFile from "./fileinput/buttons/UploadFile.svelte";
   import SelectFile from "./fileinput/buttons/SelectFile.svelte";
+  import UploadFile from "./fileinput/buttons/UploadFile.svelte";
+  import Navbar from "./Navbar.svelte";
 
   $: newFileId = totalFiles
     ? Math.max(...currentFiles.map((f) => f.id)) + 1
     : 1;
+  $: LogInfo(`[NEW FILE ID] = ${newFileId}`);
   $: totalFiles = currentFiles.length;
   $: LogInfo(`current host: ${$currentHost}`);
   let currentFiles = [];
@@ -28,7 +29,7 @@
 <div>
   <ul aria-labelledby="list-heading">
     {#each $storedFiles as file}
-      <li>
+      <li id={file.id}>
         <div class="btn-div">
           <RemoveSection
             currentFiles={$storedFiles}
@@ -37,7 +38,7 @@
             {width}
           />
           <UploadFile {file} {width} />
-          <SelectFile id={file.id} {width} />
+          <SelectFile fileId={file.id} {width} />
           <span class="fileName-text">{file.fileName}</span>
         </div>
       </li>

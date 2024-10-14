@@ -2,7 +2,6 @@
   import { onMount } from "svelte";
   import { LogInfo } from "../../wailsjs/runtime/runtime.js";
   import { currentHost } from "../stores";
-  import { GetHost, HostList } from "../../wailsjs/go/main/App.js";
 
   export let options = [
     { value: "Catbox" },
