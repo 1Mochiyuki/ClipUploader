@@ -16,7 +16,20 @@ type Preferences struct {
 
 const FILE_NAME = "preferences.toml"
 
+func CreateAppHome() error {
+	_, err := os.Stat(AppHome())
+	return err
+}
+
 func CreatePrefFileViper() error {
+	createHomeErr := CreateAppHome()
+	if createHomeErr != nil {
+		err := os.Mkdir(AppHome(), os.ModeDir)
+		if err != nil {
+			panic(err)
+		}
+	}
+	log.Info("app home created")
 	viper.SetConfigName("preferences")
 	viper.SetConfigType("toml")
 	viper.AddConfigPath(AppHome())
@@ -48,6 +61,6 @@ func AppHome() string {
 		return ""
 	}
 
-	path := fmt.Sprintf("%s%sDocuments%sclip-uploader", home, string(os.PathSeparator), string(os.PathSeparator))
+	path := fmt.Sprintf("%s%sDocuments%sclip-uploader/", home, string(os.PathSeparator), string(os.PathSeparator))
 	return path
 }
