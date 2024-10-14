@@ -46,6 +46,7 @@ func (a *App) HostList() map[string]types.Uploader {
 		catbox.Name:  catbox,
 		lobfile.Name: lobfile,
 		pomf.Name:    pomf,
+		"Test":       catbox,
 	}
 }
 

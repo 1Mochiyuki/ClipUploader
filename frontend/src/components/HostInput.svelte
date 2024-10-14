@@ -2,12 +2,9 @@
   import { onMount } from "svelte";
   import { LogInfo } from "../../wailsjs/runtime/runtime.js";
   import { currentHost } from "../stores";
+  import { HostList } from "../../wailsjs/go/main/App.js";
 
-  export let options = [
-    { value: "Catbox" },
-    { value: "Pomf" },
-    { value: "other" },
-  ];
+  let arrayOptions;
 
   export let value = "";
   let label = "Select a host";
@@ -21,16 +18,16 @@
     isOpen = !isOpen;
   };
   /**
-   * @param {Object} option - Currently selected option
+   * @param {String} option - Currently selected option
    * */
   const selectOption = (option) => {
-    value = option.value;
+    value = option;
     isOpen = false;
     currentHost.set(value);
     LogInfo(`selected host: ${value}`);
   };
 
-  onMount(() => {
+  onMount(async () => {
     const tempElement = document.createElement("span");
     tempElement.style.visibility = "hidden";
     tempElement.style.position = "absolute";
@@ -38,13 +35,23 @@
     document.body.appendChild(tempElement);
 
     let maxWidth = 0;
-    options.forEach((option) => {
-      tempElement.textContent = option.value;
+    const hostList = await HostList();
+    arrayOptions = Object.keys(hostList);
+    LogInfo(`[HOST OPTIONS]= ${arrayOptions}`);
+    arrayOptions.forEach((option) => {
+      tempElement.textContent = option;
       const width = tempElement.offsetWidth;
       if (width > maxWidth) {
         maxWidth = width;
       }
     });
+    // options.forEach((option) => {
+    //   tempElement.textContent = option.value;
+    //   const width = tempElement.offsetWidth;
+    //   if (width > maxWidth) {
+    //     maxWidth = width;
+    //   }
+    // });
 
     tempElement.textContent = $currentHost;
     const placeholderWidth = tempElement.offsetWidth;
@@ -88,16 +95,16 @@
     {#if isOpen}
       <div class="select-dropdown" role="listbox">
         <ul class="select-options">
-          {#each options as option (option.value)}
+          {#each arrayOptions as option}
             <!-- svelte-ignore a11y-click-events-have-key-events </-->
             <li
               on:click={() => selectOption(option)}
               class="select-option"
               role="option"
-              aria-selected={option.value === value}
+              aria-selected={option === value}
             >
-              {option.value}
-              {#if option.value === value}
+              {option}
+              {#if option === value}
                 <span class="select-check">
                   <svg viewBox="0 0 20 20" fill="currentColor">
                     <path
