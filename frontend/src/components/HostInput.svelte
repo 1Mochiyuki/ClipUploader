@@ -6,7 +6,7 @@
 
   let arrayOptions;
 
-  export let value = "";
+  let value = "";
   let label = "Select a host";
 
   let isOpen = false;
@@ -15,6 +15,8 @@
   let id = `select-${Math.random().toString(36).slice(2, 9)}`;
 
   const toggleDropdown = () => {
+    if (value === $currentHost) {
+    }
     isOpen = !isOpen;
   };
   /**
@@ -22,8 +24,8 @@
    * */
   const selectOption = (option) => {
     value = option;
-    isOpen = false;
     currentHost.set(value);
+    isOpen = false;
     LogInfo(`selected host: ${value}`);
   };
 
@@ -45,13 +47,6 @@
         maxWidth = width;
       }
     });
-    // options.forEach((option) => {
-    //   tempElement.textContent = option.value;
-    //   const width = tempElement.offsetWidth;
-    //   if (width > maxWidth) {
-    //     maxWidth = width;
-    //   }
-    // });
 
     tempElement.textContent = $currentHost;
     const placeholderWidth = tempElement.offsetWidth;
@@ -104,7 +99,7 @@
               aria-selected={option === value}
             >
               {option}
-              {#if option === value}
+              {#if option === value || option === $currentHost}
                 <span class="select-check">
                   <svg viewBox="0 0 20 20" fill="currentColor">
                     <path
