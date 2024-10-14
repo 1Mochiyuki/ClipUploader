@@ -17,13 +17,13 @@ To build a redistributable, production mode package, use `wails build`.
 
 ## Roadmap
 
- :white_check_mark: Create perfences file (if doesnt exist) with sane defaults
- :white_check_mark: Save settings to file
- :construction: Add auth to file hosts
- :white_check_mark: Actually upload to a file host
- :x: Add retrieving upload history
- :x: Add setting login information per host
- :x: Copy all links to clipboard
- :x: Notification for when files are uploaded
- :x: Toggle notification sound
- :x: Deploy to Vercel :)
+ :white_check_mark: Create perfences file (if doesnt exist) with sane defaults\
+ :white_check_mark: Save settings to file\
+ :construction: Add auth to file hosts\
+ :white_check_mark: Actually upload to a file host\
+ :x: Add retrieving upload history\
+ :x: Add setting login information per host\
+ :x: Copy all links to clipboard\
+ :x: Notification for when files are uploaded\
+ :x: Toggle notification sound\
+ :x: Deploy to Vercel :)\
