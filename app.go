@@ -1,9 +1,11 @@
 package main
 
 import (
-	"C2E-Wails/go/types"
+	apphome "ClipUploader/go/app_home"
+	"ClipUploader/go/types"
 	"context"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/charmbracelet/log"
@@ -11,22 +13,32 @@ import (
 	"github.com/sqweek/dialog"
 )
 
-// App struct
 type App struct {
 	ctx context.Context
 }
 
-// NewApp creates a new App application struct
 func NewApp() *App {
 	return &App{}
 }
 
-// startup is called when the app starts. The context is saved
-// so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
+	appHomeErr := types.CreateAppHome()
+	if appHomeErr != nil {
+		log.Error("shit went wrong", "error", appHomeErr)
+		panic(appHomeErr)
+	}
+	prefFileErr := types.CreatePrefFileViper()
+	if prefFileErr != nil {
+		log.Error("shit went wrong", "error", prefFileErr)
+		panic(prefFileErr)
+	}
+	createDbErr := apphome.CreateDatabase()
+	if createDbErr != nil {
+		log.Error("shit went wrong", "error", prefFileErr)
+		panic(createDbErr)
+	}
 
-	types.CreatePrefFileViper()
 	log.Info("SUCCESS")
 }
 
@@ -83,10 +95,15 @@ func (a *App) SaveHost(selectedHost string) error {
 	return nil
 }
 
-func (a *App) RemovePathFromFile(fileName string) string {
+func RemovePathFromFile(fileName string) string {
 	var name string
-	if strings.Contains(fileName, "\\") {
-		parts := strings.Split(fileName, "\\")
+	if fileName == "" {
+		return ""
+	}
+
+	separator := string(os.PathSeparator)
+	if strings.Contains(fileName, separator) {
+		parts := strings.Split(fileName, separator)
 		name = parts[len(parts)-1]
 		log.Info("new name (Go): ", "name", name)
 		return name
@@ -98,5 +115,28 @@ func (a *App) RemovePathFromFile(fileName string) string {
 
 		return name
 	}
-	return ""
+	return fileName
+}
+
+func (a *App) RemovePathFromFile(fileName string) string {
+	var name string
+	if fileName == "" {
+		return ""
+	}
+
+	separator := string(os.PathSeparator)
+	if strings.Contains(fileName, separator) {
+		parts := strings.Split(fileName, separator)
+		name = parts[len(parts)-1]
+		log.Info("new name (Go): ", "name", name)
+		return name
+	}
+	if strings.Contains(fileName, "/") {
+		parts := strings.Split(fileName, "/")
+		name = parts[len(parts)-1]
+		log.Info("new name (Go): ", "name", name)
+
+		return name
+	}
+	return fileName
 }

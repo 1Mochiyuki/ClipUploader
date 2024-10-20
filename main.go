@@ -1,9 +1,10 @@
 package main
 
 import (
-	"C2E-Wails/go/types"
+	"ClipUploader/go/types"
 	"embed"
 
+	"github.com/charmbracelet/log"
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
@@ -17,6 +18,8 @@ func main() {
 	catbox := types.NewCatbox()
 	pomf := types.NewPomf()
 	lobfile := types.NewLobfile()
+
+	log.Info("hello")
 
 	app := NewApp()
 

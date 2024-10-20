@@ -1,22 +1,26 @@
 <script>
   import { push } from "svelte-spa-router";
-  import { HostList } from "../../wailsjs/go/main/App.js";
+  import { GetHost, HostList } from "../../wailsjs/go/main/App.js";
   import { LogInfo } from "../../wailsjs/runtime/runtime.js";
   import { currentHost, currentUploadUrl } from "../stores";
+  import { onMount } from "svelte";
 
   export let addFileSection = () => {};
-  const getHosts = async () => {
+  let currHost = "";
+  $: currHost;
+  onMount(async () => {
     const hosts = await HostList();
-
-    let currHost = $currentHost;
+    LogInfo(`hosts: ${Object.entries(hosts)}`);
+    currHost = await GetHost();
     LogInfo(`[BLEHHHHHHHH] curr host: ${currHost}`);
     const catbox = Object.values(hosts[currHost])[1];
+    currentHost.set(currHost);
     currentUploadUrl.set(catbox);
 
     LogInfo(
       `[CURRENT HOST INFORMATION] keys: ${Object.keys(hosts)} | upload url: ${$currentUploadUrl}`,
     );
-  };
+  });
 </script>
 
 <div
@@ -42,7 +46,12 @@
     <button class="navbar-button" on:click={addFileSection}
       >Add File Section
     </button>
-    <button on:click={getHosts} class="navbar-button">Upload All</button>
+    <button
+      on:click={() => {
+        LogInfo(`currHost: ${currHost}`);
+      }}
+      class="navbar-button">Upload All</button
+    >
   </div>
 
   <button

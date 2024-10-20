@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@iconify/svelte": "^4.0.2",
     "@sveltejs/vite-plugin-svelte": "^2.4.1",
     "svelte": "^4.0.0",
     "vite": "^3.0.7"

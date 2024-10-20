@@ -17,19 +17,19 @@ type Preferences struct {
 const FILE_NAME = "preferences.toml"
 
 func CreateAppHome() error {
-	_, err := os.Stat(AppHome())
-	return err
+	_, createHomeErr := os.Stat(AppHome())
+	if createHomeErr != nil {
+		err := os.MkdirAll(AppHome(), os.ModeDir)
+		if err != nil {
+			return err
+		}
+		log.Info("APP HOME CREATED")
+	}
+	log.Info("APP HOME EXISTS")
+	return nil
 }
 
 func CreatePrefFileViper() error {
-	createHomeErr := CreateAppHome()
-	if createHomeErr != nil {
-		err := os.Mkdir(AppHome(), os.ModeDir)
-		if err != nil {
-			panic(err)
-		}
-	}
-	log.Info("app home created")
 	viper.SetConfigName("preferences")
 	viper.SetConfigType("toml")
 	viper.AddConfigPath(AppHome())
@@ -43,15 +43,14 @@ func CreatePrefFileViper() error {
 		if writeErr != nil {
 			panic(writeErr)
 		}
-		log.Info("CONFIG CREATION SUCCESS")
-
+		log.Info("CONFIG FILE CREATION SUCCESS")
 	}
 	viper.OnConfigChange(func(e fsnotify.Event) {
-		log.Info("CONFIG CHANGED", "msg", e.Name)
+		log.Info("CONFIG FILE CHANGED", "msg", e.Name)
 	})
 	viper.WatchConfig()
 
-	log.Info("CONFIG WATCH SUCCESS")
+	log.Info("CONFIG FILE WATCH SUCCESS")
 	return nil
 }
 

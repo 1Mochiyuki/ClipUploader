@@ -37,8 +37,8 @@
             {totalFiles}
             {width}
           />
-          <UploadFile {file} {width} />
           <SelectFile fileId={file.id} {width} />
+          <UploadFile {file} {width} />
           <span class="fileName-text">{file.fileName}</span>
         </div>
       </li>

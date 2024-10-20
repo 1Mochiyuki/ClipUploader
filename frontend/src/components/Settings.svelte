@@ -11,6 +11,7 @@
   import TimeoutDuration from "./TimeoutDuration.svelte";
   import { currentHost, currentTimeoutDuration } from "../stores";
   import { LogInfo } from "../../wailsjs/runtime/runtime.js";
+  import Catbox from "./hosts_auth/Catbox.svelte";
 
   const getPlaceholders = async () => {
     const host = await GetHost();
@@ -22,7 +23,6 @@
   };
 
   getPlaceholders();
-
   const handleSaveSettings = async () => {
     let timeout = Number($currentTimeoutDuration);
     let host = $currentHost;
@@ -75,6 +75,12 @@
     <div>
       <HostInput></HostInput>
 
+      {#if $currentHost === "Catbox"}
+        <Catbox></Catbox>
+      {:else if $currentHost === "Lobfile"}
+        <span>Lobfile >.&lt;</span>
+      {/if}
+      <div></div>
       <TimeoutDuration></TimeoutDuration>
     </div>
     <button id="save-btn" class="button-4" on:click={handleSaveSettings}
