@@ -1,5 +1,5 @@
 <script>
-  import RemoveSection from "../fileinput/buttons/RemoveSection.svelte";
+  import { LogInfo } from "wailsjs/runtime/runtime";
 
   let error = "";
   let userHash = "";
@@ -11,6 +11,9 @@
       error = "Not a valid Catbox User Hash";
       return;
     }
+
+    LogInfo("valid catbox userhash");
+
     error = "";
   }
 </script>

@@ -4,11 +4,13 @@ import (
 	apphome "ClipUploader/go/app_home"
 	"ClipUploader/go/types"
 	"context"
+	_ "embed"
 	"fmt"
 	"os"
 	"strings"
 
 	"github.com/charmbracelet/log"
+	_ "github.com/mattn/go-sqlite3"
 	"github.com/spf13/viper"
 	"github.com/sqweek/dialog"
 )

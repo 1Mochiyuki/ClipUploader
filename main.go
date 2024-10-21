@@ -1,7 +1,9 @@
 package main
 
 import (
+	"ClipUploader/go/db"
 	"ClipUploader/go/types"
+	"database/sql"
 	"embed"
 
 	"github.com/charmbracelet/log"
@@ -22,6 +24,11 @@ func main() {
 	log.Info("hello")
 
 	app := NewApp()
+	openConn, openConnErr := sql.Open("sqlite3", "database.sqlite")
+	if openConnErr != nil {
+		panic(openConnErr)
+	}
+	queries := db.New(openConn)
 
 	// Create application with options
 
@@ -39,6 +46,7 @@ func main() {
 			catbox,
 			pomf,
 			lobfile,
+			queries,
 		},
 	})
 	if err != nil {

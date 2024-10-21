@@ -7,6 +7,7 @@ toolchain go1.23.0
 require (
 	github.com/charmbracelet/log v0.4.0
 	github.com/fsnotify/fsnotify v1.7.0
+	github.com/mattn/go-sqlite3 v1.14.24
 	github.com/spf13/viper v1.19.0
 	github.com/sqweek/dialog v0.0.0-20240226140203-065105509627
 	github.com/stretchr/testify v1.9.0
